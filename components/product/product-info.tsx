@@ -1,0 +1,161 @@
+'use client';
+
+import { useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
+import { Accordion, AccordionItem } from '@/components/ui/accordion';
+import { ExpandableText } from '@/components/ui/expandable-text';
+import { ProductActions } from '@/components/product/product-actions';
+import { formatRupiah } from '@/lib/utils/format';
+import { computeProductPriceDisplay } from '@/lib/utils/product-pricing';
+import type { DivingType } from '@/lib/db/schema';
+import type { VariantOptionDefinition } from '@/lib/utils/variant-selection';
+
+interface Variant {
+  id: string;
+  name: string;
+  options: Record<string, string>;
+  priceCents: number | null;
+  isActive: boolean;
+}
+
+interface ProductInfoProps {
+  product: {
+    id: string;
+    name: string;
+    description: string | null;
+    sku: string | null;
+    priceCents: number;
+    compareAtPriceCents: number | null;
+    isActive: boolean;
+    category?: { name: string; slug: string } | null;
+    brand?: { name: string } | null;
+    divingTypes?: string[];
+  };
+  variants: Variant[];
+  variantOptions?: VariantOptionDefinition[];
+}
+
+export function ProductInfo({ product, variants, variantOptions }: ProductInfoProps) {
+  const t = useTranslations('product');
+  const tDivingTypes = useTranslations('common.divingTypes');
+  const [currentPriceCents, setCurrentPriceCents] = useState<number | null>(null);
+  const [currentCompareAtPriceCents, setCurrentCompareAtPriceCents] = useState<number | null>(
+    product.compareAtPriceCents
+  );
+  
+  // Calculate base price range using shared utility
+  const basePrice = computeProductPriceDisplay({
+    priceCents: product.priceCents,
+    compareAtPriceCents: product.compareAtPriceCents,
+    variants: variants.map(v => ({
+      isActive: v.isActive,
+      priceCents: v.priceCents,
+    })),
+  });
+  
+  const hasVariantPricing = basePrice.priceRangeMin !== undefined;
+  const priceRangeMin = basePrice.priceRangeMin ?? product.priceCents;
+  const priceRangeMax = basePrice.priceRangeMax ?? product.priceCents;
+  
+  // Determine what to display
+  const displayPrice = currentPriceCents ?? priceRangeMin;
+  const isPriceRange = !currentPriceCents && hasVariantPricing && priceRangeMin !== priceRangeMax;
+  
+  // Handle price changes from variant selection
+  const handlePriceChange = useCallback((priceInfo: { priceCents: number | null; compareAtPriceCents: number | null }) => {
+    setCurrentPriceCents(priceInfo.priceCents);
+    setCurrentCompareAtPriceCents(priceInfo.compareAtPriceCents);
+  }, []);
+
+  // Only a real discount if the compare-at price is higher than the selling price
+  const effectivePrice = currentPriceCents ?? priceRangeMin;
+  const hasDiscount = !!currentCompareAtPriceCents && currentCompareAtPriceCents > effectivePrice;
+
+  return (
+    <div className="lg:sticky lg:top-24 max-w-md">
+      {/* Vendor */}
+      {product.brand && (
+        <Link
+          href={`/produk?brand=${product.brand.name.toLowerCase().replace(/\s+/g, '-')}`}
+          className="text-xs uppercase tracking-widest text-neutral-400 hover:text-neutral-600 transition-colors mb-2"
+        >
+          {product.brand.name}
+        </Link>
+      )}
+
+      {/* Title */}
+      <h1 className="text-3xl lg:text-4xl font-bold tracking-tighter mb-3">
+        {product.name}
+      </h1>
+
+      {/* Price */}
+      <p className="text-xl lg:text-2xl font-semibold tracking-tight mb-6">
+        {hasDiscount ? (
+          <>
+            <span className="text-red-500">
+              {isPriceRange
+                ? `${formatRupiah(priceRangeMin)} - ${formatRupiah(priceRangeMax)}`
+                : formatRupiah(displayPrice)
+              }
+            </span>{' '}
+            <s className="text-neutral-400 font-normal">{formatRupiah(currentCompareAtPriceCents!)}</s>
+          </>
+        ) : (
+          isPriceRange 
+            ? `${formatRupiah(priceRangeMin)} - ${formatRupiah(priceRangeMax)}`
+            : formatRupiah(displayPrice)
+        )}
+      </p>
+
+      {/* Interactive Actions (Quantity, Variants, Add to Cart) */}
+      <ProductActions 
+        productId={product.id}
+        variants={variants}
+        variantOptions={variantOptions}
+        basePriceCents={product.priceCents}
+        compareAtPriceCents={product.compareAtPriceCents}
+        isActive={product.isActive}
+        onPriceChange={handlePriceChange}
+      />
+
+      {/* Accordion */}
+      <Accordion>
+        <AccordionItem title={t('descriptionTab')} defaultOpen>
+          <ExpandableText
+            text={product.description || ''}
+            emptyText={t('noDescription')}
+            showMoreText={t('showMore')}
+            showLessText={t('showLess')}
+          />
+        </AccordionItem>
+        <AccordionItem title={t('specificationsTab')}>
+          <table className="w-full">
+            <tbody>
+              <tr>
+                <td className="py-1.5 text-neutral-500 w-1/3">SKU</td>
+                <td className="py-1.5">{product.sku || '-'}</td>
+              </tr>
+              <tr>
+                <td className="py-1.5 text-neutral-500 w-1/3">{t('divingTypeLabel')}</td>
+                <td className="py-1.5">
+                  {(product.divingTypes?.length ?? 0) > 0
+                    ? product.divingTypes!.map(dt => tDivingTypes(dt as DivingType)).join(', ')
+                    : '-'}
+                </td>
+              </tr>
+              <tr>
+                <td className="py-1.5 text-neutral-500 w-1/3">{t('categoryLabel')}</td>
+                <td className="py-1.5">{product.category?.name || '-'}</td>
+              </tr>
+              <tr>
+                <td className="py-1.5 text-neutral-500 w-1/3">{t('brandLabel')}</td>
+                <td className="py-1.5">{product.brand?.name || '-'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </AccordionItem>
+      </Accordion>
+    </div>
+  );
+}

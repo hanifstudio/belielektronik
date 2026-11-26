@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akun Saya - Arnes Dive Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { brand: '#333333' } } } }</script>
+</head>
+<body class="font-sans text-sm">
+
+    <!-- Top Bar & Nav -->
+    <div class="bg-gray-200 py-2 text-center text-xs">Gratis Ongkir untuk pembelian di atas Rp 500.000</div>
+    <nav class="flex items-center justify-between px-4 py-4 border-b border-gray-200 bg-white max-w-7xl mx-auto">
+        <button class="lg:hidden text-gray-600" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <div class="hidden lg:flex gap-6">
+            <a href="homepage.html" class="text-gray-600 hover:text-brand text-sm">Beranda</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Freediving</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Scuba</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Sale</a>
+        </div>
+        <a href="homepage.html" class="text-2xl font-bold text-brand">ARNES DIVE</a>
+        <div class="flex gap-4 text-gray-600 text-sm">
+            <a href="wishlist.html" class="hover:text-brand">[Wishlist]</a>
+            <a href="cart.html" class="hover:text-brand">[Keranjang]</a>
+        </div>
+    </nav>
+    <div id="mobile-menu" class="hidden lg:hidden bg-white border-b px-4 py-4">
+        <div class="flex flex-col gap-3">
+            <a href="homepage.html" class="text-gray-600 py-2">Beranda</a>
+            <a href="plp.html" class="text-gray-600 py-2">Freediving</a>
+            <a href="plp.html" class="text-gray-600 py-2">Scuba</a>
+            <a href="plp.html" class="text-gray-600 py-2">Sale</a>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Sidebar -->
+            <aside class="w-full lg:w-64 flex-shrink-0">
+                <div class="bg-gray-100 p-6 text-center mb-4">
+                    <div class="w-20 h-20 rounded-full bg-gray-300 mx-auto mb-3 flex items-center justify-center text-3xl text-gray-500">A</div>
+                    <div class="font-medium">Ahmad Diver</div>
+                    <div class="text-xs text-gray-500">ahmad@email.com</div>
+                </div>
+                <nav class="bg-gray-100">
+                    <a href="account.html" class="block py-3 px-5 border-l-4 border-brand bg-white font-medium">Dashboard</a>
+                    <a href="account-orders.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Pesanan Saya</a>
+                    <a href="wishlist.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Wishlist</a>
+                    <a href="account-address.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Alamat</a>
+                    <a href="account-settings.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Pengaturan Akun</a>
+                    <a href="login.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Keluar</a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1">
+                <h1 class="text-2xl font-semibold mb-6">Halo, Ahmad! 👋</h1>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-4 mb-8">
+                    <div class="bg-gray-100 p-6 text-center">
+                        <div class="text-2xl lg:text-3xl font-semibold">3</div>
+                        <div class="text-xs text-gray-600 uppercase tracking-wider">Total Pesanan</div>
+                    </div>
+                    <div class="bg-gray-100 p-6 text-center">
+                        <div class="text-2xl lg:text-3xl font-semibold">1</div>
+                        <div class="text-xs text-gray-600 uppercase tracking-wider">Dalam Proses</div>
+                    </div>
+                    <div class="bg-gray-100 p-6 text-center">
+                        <div class="text-2xl lg:text-3xl font-semibold">5</div>
+                        <div class="text-xs text-gray-600 uppercase tracking-wider">Wishlist</div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <h2 class="font-semibold mb-4">Pesanan Terbaru</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full bg-white border border-gray-200 text-sm">
+                        <thead>
+                            <tr class="bg-gray-100 text-xs uppercase text-gray-600">
+                                <th class="text-left p-4">Order ID</th>
+                                <th class="text-left p-4">Tanggal</th>
+                                <th class="text-left p-4">Total</th>
+                                <th class="text-left p-4">Status</th>
+                                <th class="text-right p-4"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-t">
+                                <td class="p-4 font-medium">#ARD-2024-001</td>
+                                <td class="p-4">28 Jun 2024</td>
+                                <td class="p-4">Rp 3.375.000</td>
+                                <td class="p-4"><span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Dikirim</span></td>
+                                <td class="p-4 text-right"><a href="#" class="text-xs hover:text-brand">Lihat Detail →</a></td>
+                            </tr>
+                            <tr class="border-t">
+                                <td class="p-4 font-medium">#ARD-2024-002</td>
+                                <td class="p-4">2 Jul 2024</td>
+                                <td class="p-4">Rp 1.200.000</td>
+                                <td class="p-4"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">Diproses</span></td>
+                                <td class="p-4 text-right"><a href="#" class="text-xs hover:text-brand">Lihat Detail →</a></td>
+                            </tr>
+                            <tr class="border-t">
+                                <td class="p-4 font-medium">#ARD-2024-003</td>
+                                <td class="p-4">15 Jun 2024</td>
+                                <td class="p-4">Rp 850.000</td>
+                                <td class="p-4"><span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Selesai</span></td>
+                                <td class="p-4 text-right"><a href="#" class="text-xs hover:text-brand">Lihat Detail →</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a href="account-orders.html" class="inline-block mt-4 text-sm hover:text-brand">Lihat Semua Pesanan →</a>
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>

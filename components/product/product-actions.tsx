@@ -1,0 +1,206 @@
+'use client';
+
+import { useState, useEffect, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
+import { Icon } from '@iconify/react';
+import { toast } from 'sonner';
+import { AnimatedButton } from '@/components/ui/animated-button';
+import { useCartStore } from '@/lib/store/cart';
+import { track } from '@/lib/analytics/track';
+import { getVariantOptionGroups, findMatchingVariant } from '@/lib/utils/variant-selection';
+import type { VariantOptionDefinition } from '@/lib/utils/variant-selection';
+
+interface Variant {
+  id: string;
+  name: string;
+  options: Record<string, string>;
+  priceCents: number | null;
+  isActive: boolean;
+}
+
+interface ProductActionsProps {
+  productId: string;
+  variants: Variant[];
+  variantOptions?: VariantOptionDefinition[];
+  basePriceCents: number;
+  compareAtPriceCents: number | null;
+  isActive: boolean;
+  onPriceChange?: (priceInfo: { priceCents: number | null; compareAtPriceCents: number | null }) => void;
+}
+
+export function ProductActions({ 
+  productId,
+  variants = [],
+  variantOptions,
+  basePriceCents,
+  compareAtPriceCents,
+  isActive,
+  onPriceChange,
+}: ProductActionsProps) {
+  const t = useTranslations('product');
+  const [quantity, setQuantity] = useState(1);
+  // Track selected option values per dimension instead of a single variant id.
+  // This lets multi-dimensional variants (e.g. stiffness × size) combine
+  // correctly instead of one dimension's click overwriting the other.
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
+    const firstActiveVariant = variants.find(v => v.isActive);
+    return firstActiveVariant ? { ...firstActiveVariant.options } : {};
+  });
+  const [added, setAdded] = useState(false);
+  
+  const addItem = useCartStore((state) => state.addItem);
+  const isLoading = useCartStore((state) => state.isLoading);
+
+  // Derive the currently selected variant from the option-value combination.
+  const selectedVariant = useMemo(
+    () => findMatchingVariant(variants, selectedOptions),
+    [variants, selectedOptions],
+  );
+  const selectedVariantId = selectedVariant?.id;
+
+  const handleAddToCart = async () => {
+    if (added || isLoading) return;
+    
+    setAdded(true);
+    
+    const result = await addItem(productId, selectedVariantId, quantity);
+
+    if (result.success) {
+      track('add_to_cart', { productId, variantId: selectedVariantId ?? '', quantity });
+      toast.success(t('addedToast'), {
+        action: {
+          label: t('viewCartAction'),
+          onClick: () => window.location.href = '/cart',
+        },
+      });
+      setTimeout(() => setAdded(false), 2000);
+    } else {
+      setAdded(false);
+      toast.error(t('addToCartErrorToast'), {
+        description: result.error || t('addToCartErrorDescription'),
+      });
+    }
+  };
+
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(q => q - 1);
+    }
+  };
+
+  const increaseQuantity = () => {
+    if (quantity < 99) {
+      setQuantity(q => q + 1);
+    }
+  };
+
+  // Get selected variant price
+  const currentPriceCents = selectedVariant?.priceCents ?? basePriceCents;
+  
+  // Notify parent of price changes
+  useEffect(() => {
+    if (onPriceChange) {
+      onPriceChange({ 
+        priceCents: currentPriceCents, 
+        compareAtPriceCents: selectedVariant ? null : compareAtPriceCents 
+      });
+    }
+  }, [currentPriceCents, selectedVariant, compareAtPriceCents, onPriceChange]);
+  
+  // Group option values by dimension for rendering
+  const variantOptionGroups = useMemo(
+    () => getVariantOptionGroups(variants, variantOptions),
+    [variants, variantOptions],
+  );
+
+  return (
+    <>
+      {/* Variant Selection */}
+      {variantOptionGroups.map((group) => (
+        <div key={group.name} className="mb-6">
+          <p className="text-sm uppercase tracking-widest text-neutral-600 font-medium mb-3">
+            {group.name}{selectedVariant ? '' : <span className="text-red-500 ml-1">*</span>}
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {group.values.map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() =>
+                  setSelectedOptions((prev) => ({ ...prev, [group.name]: value }))
+                }
+                className={`min-w-[48px] h-12 px-4 rounded-md border text-sm font-medium transition-colors ${
+                  selectedOptions[group.name] === value
+                    ? 'border-neutral-900 bg-neutral-900 text-white'
+                    : 'border-neutral-300 hover:border-neutral-900'
+                }`}
+              >
+                {value}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {/* Quantity */}
+      <div className="mb-6">
+        <p className="text-sm uppercase tracking-widest text-neutral-600 font-medium mb-3">{t('quantityLabel')}</p>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={decreaseQuantity}
+            disabled={quantity <= 1}
+            className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span className="text-lg leading-none">−</span>
+          </button>
+          <span className="w-8 text-center font-medium">{quantity}</span>
+          <button
+            type="button"
+            onClick={increaseQuantity}
+            disabled={quantity >= 99}
+            className="w-9 h-9 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-neutral-900 hover:text-white hover:border-neutral-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span className="text-lg leading-none">+</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Stock Status */}
+      {isActive ? (
+        <p className="text-sm text-green-600 mb-6 flex items-center gap-2">
+          <Icon icon="solar:check-circle-linear" className="w-4 h-4" />
+          {t('inStock')}
+        </p>
+      ) : (
+        <p className="text-sm text-red-600 mb-6 flex items-center gap-2">
+          <Icon icon="solar:close-circle-linear" className="w-4 h-4" />
+          {t('outOfStock')}
+        </p>
+      )}
+
+      {/* Actions */}
+      <div className="flex gap-3 mb-8">
+        <AnimatedButton
+          className="flex-1 h-[54px] text-base"
+          onClick={handleAddToCart}
+          disabled={!isActive || added || isLoading}
+        >
+          {added ? (
+            <span className="flex items-center gap-2">
+              <Icon icon="solar:check-circle-linear" className="w-5 h-5" />
+              {t('added')}!
+            </span>
+          ) : isLoading ? (
+            t('addingToCart')
+          ) : (
+            t('addToCart')
+          )}
+        </AnimatedButton>
+        <AnimatedButton className="!w-[54px] !h-[54px] !p-0" variant="outline">
+          <Icon icon="solar:heart-linear" className="w-5 h-5" />
+        </AnimatedButton>
+      </div>
+    </>
+  );
+}

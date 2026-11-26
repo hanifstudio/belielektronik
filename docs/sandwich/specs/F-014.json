@@ -1,0 +1,41 @@
+{
+  "featureId": "F-014",
+  "title": "Admin order list & detail view",
+  "module": "Order Management",
+  "description": "Admin order list with filtering (status, date range, search) and order detail view with customer info, items, and payment.",
+  "scope": {
+    "inScope": [
+      "Order list with filtering by status, date range, and search",
+      "Order detail view showing customer info, items, and payment",
+      "Served via Route Handlers (HTTP) for the admin's TanStack Query layer"
+    ],
+    "outOfScope": [
+      "Order status changes (separate feature)"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Admin can filter the order list by status and date range",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Admin can search orders",
+      "done": false
+    },
+    {
+      "id": "AC3",
+      "text": "Admin can open an order and see customer info, line items, and payment details",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-002",
+    "F-013"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "99-100"
+  }
+}

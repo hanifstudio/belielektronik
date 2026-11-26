@@ -1,0 +1,344 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
+import Image from 'next/image';
+import { Icon } from '@iconify/react';
+import { useCartStore } from '@/lib/store/cart';
+import { formatRupiah } from '@/lib/utils/format';
+import { productImageUrl } from '@/lib/utils/product-image';
+import { AnimatedButton } from '@/components/ui/animated-button';
+
+export function OrderSummary() {
+  const t = useTranslations('cart');
+  const {
+    items,
+    promoCode,
+    promoDiscountCents,
+    applyPromo,
+    clearPromo,
+    getSubtotalCents,
+    getTotalCents,
+    lastError,
+  } = useCartStore();
+
+  const [promoInput, setPromoInput] = useState(promoCode || '');
+  const [promoError, setPromoError] = useState('');
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  const handleImageError = (imageUrl: string) => {
+    setFailedImages(prev => new Set([...prev, imageUrl]));
+  };
+  
+  const subtotalCents = getSubtotalCents();
+  const totalCents = getTotalCents();
+
+  // Prevent body scroll when drawer is open
+  useEffect(() => {
+    if (isMobileDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileDrawerOpen]);
+
+  const handleApplyPromo = async () => {
+    if (!promoInput.trim()) {
+      setPromoError(t('summary.promoRequiredError'));
+      return;
+    }
+
+    setIsApplyingPromo(true);
+    setPromoError('');
+
+    const result = await applyPromo(promoInput);
+
+    setIsApplyingPromo(false);
+
+    if (!result.success) {
+      setPromoError(result.error || t('summary.promoInvalidError'));
+    }
+  };
+
+  const handleRemovePromo = () => {
+    clearPromo();
+    setPromoInput('');
+    setPromoError('');
+  };
+
+  return (
+    <>
+      {/* Desktop Sidebar Card */}
+      <div className="hidden lg:block bg-neutral-50 p-8 lg:p-12 sticky top-24 rounded-2xl">
+        <h2 className="text-xl font-semibold tracking-tight mb-6">{t('summary.title')}</h2>
+
+        {/* Items */}
+        <div className="space-y-4 mb-6">
+          {items.map((item) => {
+            const image = item.product.images?.[0];
+            const thumbnail = image && !failedImages.has(image)
+              ? productImageUrl(image, 'thumb')
+              : undefined;
+            const priceCents = item.variant?.priceCents ?? item.product.priceCents;
+            const compareAtPriceCents = item.variant ? null : item.product.compareAtPriceCents;
+            const hasDiscount = compareAtPriceCents !== null && compareAtPriceCents > item.product.priceCents;
+
+            return (
+              <div key={item.id} className="flex gap-4 items-center">
+                <div className="w-12 h-12 bg-neutral-100 rounded-lg relative overflow-hidden flex-shrink-0 flex items-center justify-center">
+                  {thumbnail ? (
+                    <Image
+                      src={thumbnail}
+                      alt={item.product.name}
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                      onError={() => handleImageError(image!)}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-neutral-300">
+                      <Icon icon="solar:box-linear" className="w-5 h-5" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{item.product.name}</p>
+                  <p className="text-xs text-neutral-400">{t('summary.qty', { quantity: item.quantity })}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium">{formatRupiah(priceCents * item.quantity)}</p>
+                  {hasDiscount && (
+                    <p className="text-xs text-neutral-400 line-through">
+                      {formatRupiah(compareAtPriceCents! * item.quantity)}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Promo Code */}
+        <div className="mb-6">
+          <p className="text-sm font-medium mb-2">{t('summary.promoLabel')}</p>
+          {promoCode ? (
+            <div className="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-xl">
+              <div className="flex items-center gap-2">
+                <Icon icon="solar:check-circle-bold" className="w-5 h-5 text-green-600" />
+                <span className="text-sm font-medium text-green-700">{promoCode}</span>
+              </div>
+              <button
+                onClick={handleRemovePromo}
+                className="text-neutral-400 hover:text-red-500 transition-colors"
+                aria-label={t('summary.removePromoAria')}
+              >
+                <Icon icon="solar:close-circle-linear" className="w-5 h-5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={promoInput}
+                onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                onKeyDown={(e) => e.key === 'Enter' && handleApplyPromo()}
+                placeholder={t('summary.promoPlaceholder')}
+                disabled={isApplyingPromo}
+                className="flex-1 px-4 py-3 border border-neutral-200 rounded-xl text-sm focus:border-neutral-900 focus:outline-none transition-colors disabled:opacity-50"
+              />
+              <button
+                onClick={handleApplyPromo}
+                disabled={isApplyingPromo}
+                className="px-5 py-3 bg-neutral-900 text-white text-sm font-medium rounded-xl hover:bg-neutral-800 transition-colors disabled:opacity-50"
+              >
+                {isApplyingPromo ? t('summary.promoApplying') : t('summary.promoApply')}
+              </button>
+            </div>
+          )}
+          {promoError && <p className="text-xs text-red-500 mt-2">{promoError}</p>}
+          {lastError && <p className="text-xs text-red-500 mt-2">{lastError}</p>}
+          {promoDiscountCents > 0 && (
+            <p className="text-xs text-green-600 mt-2">{t('summary.promoAppliedMessage', { amount: formatRupiah(promoDiscountCents) })}</p>
+          )}
+        </div>
+
+        {/* Totals */}
+        <div className="border-t border-neutral-100 pt-6 space-y-3">
+          <div className="flex justify-between text-sm">
+            <span className="text-neutral-500">{t('summary.subtotal')}</span>
+            <span>{formatRupiah(subtotalCents)}</span>
+          </div>
+          {promoDiscountCents > 0 && (
+            <div className="flex justify-between text-sm text-green-600">
+              <span>{t('summary.discount')}</span>
+              <span>-{formatRupiah(promoDiscountCents)}</span>
+            </div>
+          )}
+          <div className="flex justify-between text-sm">
+            <span className="text-neutral-500">{t('summary.shipping')}</span>
+            <span>{t('summary.shippingCalculatedAtCheckout')}</span>
+          </div>
+          <div className="flex justify-between text-xl font-semibold tracking-tight pt-3 border-t border-neutral-100">
+            <span>{t('summary.total')}</span>
+            <span>{formatRupiah(totalCents)}</span>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="mt-8">
+          <AnimatedButton asChild className="w-full py-4 text-base">
+            <Link href="/checkout">
+              {t('summary.checkoutCta')}
+            </Link>
+          </AnimatedButton>
+        </div>
+
+        {/* Trust */}
+        <div className="flex items-center justify-center gap-2 mt-6 text-xs text-neutral-400">
+          <Icon icon="solar:shield-check-linear" className="w-4 h-4" />
+          {t('summary.secureTransaction')}
+        </div>
+      </div>
+
+      {/* Mobile: Sticky Bottom Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.1)] z-40">
+        <button
+          onClick={() => setIsMobileDrawerOpen(true)}
+          className="w-full"
+        >
+          <div className="px-4 pt-3 pb-2 flex items-center justify-between">
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm text-neutral-500">{t('summary.total')}</span>
+              <span className="text-lg font-semibold tracking-tight">{formatRupiah(totalCents)}</span>
+            </div>
+            <div className="flex items-center gap-1 text-neutral-400">
+              <span className="text-xs">{t('summary.detailsToggle')}</span>
+              <Icon icon="solar:alt-arrow-up-linear" className="w-4 h-4" />
+            </div>
+          </div>
+        </button>
+        <div className="px-4 pb-4">
+          <AnimatedButton asChild className="w-full py-4 text-sm">
+            <Link href="/checkout">
+              {t('summary.checkoutShort')}
+            </Link>
+          </AnimatedButton>
+        </div>
+      </div>
+
+      {/* Mobile: Drawer Overlay */}
+      {isMobileDrawerOpen && (
+        <div className="lg:hidden fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setIsMobileDrawerOpen(false)}
+          />
+          
+          {/* Drawer */}
+          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[85vh] overflow-y-auto animate-drawer-up">
+            {/* Drawer Header */}
+            <div className="sticky top-0 bg-white px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
+              <h2 className="text-lg font-semibold tracking-tight">{t('summary.title')}</h2>
+              <button
+                onClick={() => setIsMobileDrawerOpen(false)}
+                className="p-2 -mr-2 hover:bg-neutral-100 rounded-full transition-colors"
+              >
+                <Icon icon="solar:close-circle-linear" className="w-6 h-6 text-neutral-400" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {/* Promo Code */}
+              <div className="mb-6">
+                <p className="text-sm font-medium mb-2">{t('summary.promoLabel')}</p>
+                {promoCode ? (
+                  <div className="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-xl">
+                    <div className="flex items-center gap-2">
+                      <Icon icon="solar:check-circle-bold" className="w-5 h-5 text-green-600" />
+                      <span className="text-sm font-medium text-green-700">{promoCode}</span>
+                    </div>
+                    <button
+                      onClick={handleRemovePromo}
+                      className="text-neutral-400 hover:text-red-500 transition-colors"
+                      aria-label={t('summary.removePromoAria')}
+                    >
+                      <Icon icon="solar:close-circle-linear" className="w-5 h-5" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={promoInput}
+                      onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                      onKeyDown={(e) => e.key === 'Enter' && handleApplyPromo()}
+                      placeholder={t('summary.promoPlaceholder')}
+                      disabled={isApplyingPromo}
+                      className="flex-1 px-4 py-3 border border-neutral-200 rounded-xl text-sm focus:border-neutral-900 focus:outline-none transition-colors disabled:opacity-50"
+                    />
+                    <button
+                      onClick={handleApplyPromo}
+                      disabled={isApplyingPromo}
+                      className="px-5 py-3 bg-neutral-900 text-white text-sm font-medium rounded-xl hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    >
+                      {isApplyingPromo ? t('summary.promoApplying') : t('summary.promoApply')}
+                    </button>
+                  </div>
+                )}
+                {promoError && <p className="text-xs text-red-500 mt-2">{promoError}</p>}
+                {lastError && <p className="text-xs text-red-500 mt-2">{lastError}</p>}
+                {promoDiscountCents > 0 && (
+                  <p className="text-xs text-green-600 mt-2">{t('summary.promoAppliedMessage', { amount: formatRupiah(promoDiscountCents) })}</p>
+                )}
+              </div>
+
+              {/* Totals */}
+              <div className="border-t border-neutral-100 pt-6 space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-neutral-500">{t('summary.subtotal')}</span>
+                  <span>{formatRupiah(subtotalCents)}</span>
+                </div>
+                {promoDiscountCents > 0 && (
+                  <div className="flex justify-between text-sm text-green-600">
+                    <span>{t('summary.discount')}</span>
+                    <span>-{formatRupiah(promoDiscountCents)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-sm">
+                  <span className="text-neutral-500">{t('summary.shipping')}</span>
+                  <span>{t('summary.shippingCalculatedAtCheckout')}</span>
+                </div>
+                <div className="flex justify-between text-xl font-semibold tracking-tight pt-3 border-t border-neutral-100">
+                  <span>{t('summary.total')}</span>
+                  <span>{formatRupiah(totalCents)}</span>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="mt-6">
+                <AnimatedButton asChild className="w-full py-4 text-base">
+                  <Link href="/checkout">
+                    {t('summary.checkoutCta')}
+                  </Link>
+                </AnimatedButton>
+              </div>
+
+              {/* Trust */}
+              <div className="flex items-center justify-center gap-2 mt-4 text-xs text-neutral-400">
+                <Icon icon="solar:shield-check-linear" className="w-4 h-4" />
+                {t('summary.secureTransaction')}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

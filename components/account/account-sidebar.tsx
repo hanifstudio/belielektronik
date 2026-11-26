@@ -1,0 +1,57 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { Icon } from '@iconify/react';
+import { cn } from '@/lib/utils/cn';
+
+export function AccountSidebar() {
+  const t = useTranslations('account');
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const navItems = [
+    { href: '/account/orders', label: t('sidebar.orders'), icon: 'solar:bag-3-linear' },
+    { href: '/account/addresses', label: t('sidebar.addresses'), icon: 'solar:map-point-linear' },
+    { href: '/account/settings', label: t('sidebar.settings'), icon: 'solar:settings-linear' },
+  ];
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/');
+    router.refresh();
+  };
+
+  return (
+    <aside className="w-full lg:w-56 flex-shrink-0">
+      {/* Mobile: Horizontal scrollable pills */}
+      <nav className="flex gap-2 overflow-x-auto pb-2 lg:pb-0 -mx-2 px-2 lg:flex-col lg:mx-0 lg:px-0 lg:space-y-1">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-2 lg:gap-3 py-2.5 px-4 rounded-xl transition-colors whitespace-nowrap flex-shrink-0',
+                isActive
+                  ? 'bg-neutral-100 font-medium'
+                  : 'text-neutral-600 hover:bg-neutral-50'
+              )}
+            >
+              <Icon icon={item.icon} className="w-5 h-5" />
+              <span className="text-sm lg:text-base">{item.label}</span>
+            </Link>
+          );
+        })}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 lg:gap-3 py-2.5 px-4 rounded-xl text-neutral-600 hover:bg-neutral-50 transition-colors whitespace-nowrap flex-shrink-0 cursor-pointer"
+        >
+          <Icon icon="solar:logout-2-linear" className="w-5 h-5" />
+          <span className="text-sm lg:text-base">{t('sidebar.logout')}</span>
+        </button>
+      </nav>
+    </aside>
+  );
+}

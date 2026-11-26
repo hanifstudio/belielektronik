@@ -1,0 +1,49 @@
+{
+  "featureId": "F-002",
+  "title": "Core authentication (registration, login, session, RBAC, rate limiting)",
+  "module": "Authentication",
+  "description": "Custom JWT session auth via jose: email/password registration with validation, secure login with HTTP-only cookie sessions, role-based access control (customer/admin/super_admin), and rate limiting on auth endpoints.",
+  "scope": {
+    "inScope": [
+      "Email/password registration with validation (name, email, password, phone)",
+      "Login with credential verification against stored password hash (lib/auth/password.ts)",
+      "HTTP-only cookie session using jose JWT, containing user ID and role",
+      "Role-based access control: customer, admin, super_admin",
+      "Rate limiting on auth endpoints (register, login)"
+    ],
+    "outOfScope": [
+      "Email verification (separate feature)",
+      "Forgot password flow (separate feature)",
+      "OAuth/social login (not in brief)"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "A customer can register with email/password and receive a session",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "A customer can log in and receive an HTTP-only JWT session cookie",
+      "done": false
+    },
+    {
+      "id": "AC3",
+      "text": "Admin-only routes reject requests from a customer-role session",
+      "done": false
+    },
+    {
+      "id": "AC4",
+      "text": "Repeated failed login attempts are rate-limited",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-001"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "29-34"
+  }
+}

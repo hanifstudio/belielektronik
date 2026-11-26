@@ -1,0 +1,50 @@
+{
+  "featureId": "F-012",
+  "title": "Midtrans payment integration (Snap, VA, e-wallets, QRIS, webhook, idempotency)",
+  "module": "Payment",
+  "description": "Midtrans Snap checkout supporting cards, bank transfer (VA), e-wallets (GoPay/OVO/ShopeePay), and QRIS, behind a PaymentProvider interface; signature-verified webhook handler; payment status tracking; idempotency keys to prevent duplicate charges.",
+  "scope": {
+    "inScope": [
+      "Midtrans Snap integration for checkout",
+      "Support for credit/debit cards, bank transfer (VA), e-wallets (GoPay, OVO, ShopeePay), QRIS",
+      "PaymentProvider interface abstracting Midtrans (swappable for Stripe/Xendit later)",
+      "Webhook handler with signature verification before updating order status",
+      "Payment status tracking (pending, paid, failed, expired)",
+      "Idempotency keys to prevent duplicate charges"
+    ],
+    "outOfScope": [
+      "Any payment provider other than Midtrans",
+      "Refund/partial-refund flows (not stated)"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Customer can pay via Midtrans Snap using at least one card, VA, e-wallet, and QRIS method",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Webhook handler rejects requests with an invalid Midtrans signature",
+      "done": false
+    },
+    {
+      "id": "AC3",
+      "text": "A verified webhook updates the order's payment status correctly",
+      "done": false
+    },
+    {
+      "id": "AC4",
+      "text": "Submitting the same order twice does not create duplicate charges",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-005",
+    "F-011"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "82-90"
+  }
+}

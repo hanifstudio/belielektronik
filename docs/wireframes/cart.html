@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang - Arnes Dive Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { brand: '#333333' } } } }
+    </script>
+</head>
+<body class="font-sans text-sm bg-gray-50">
+
+    <!-- Top Bar -->
+    <div class="bg-gray-200 py-2 text-center text-xs">Gratis Ongkir untuk pembelian di atas Rp 500.000</div>
+
+    <!-- Navigation -->
+    <nav class="flex items-center justify-between px-4 py-4 border-b border-gray-200 bg-white">
+        <button class="lg:hidden text-gray-600" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <div class="hidden lg:flex gap-6">
+            <a href="homepage.html" class="text-gray-600 hover:text-brand text-sm">Beranda</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Freediving</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Scuba</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Aksesoris</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Sale</a>
+        </div>
+        <a href="homepage.html" class="text-2xl font-bold text-brand absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0">ARNES DIVE</a>
+        <div class="flex gap-4 text-gray-600 text-sm">
+            <a href="search.html" class="hidden sm:block hover:text-brand">[Cari]</a>
+            <a href="wishlist.html" class="hover:text-brand">[Wishlist]</a>
+            <a href="cart.html" class="hover:text-brand">[Keranjang]</a>
+            <a href="account.html" class="hidden sm:block hover:text-brand">[Akun]</a>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-white border-b px-4 py-4">
+        <div class="flex flex-col gap-3">
+            <a href="homepage.html" class="text-gray-600 py-2">Beranda</a>
+            <a href="plp.html" class="text-gray-600 py-2">Freediving</a>
+            <a href="plp.html" class="text-gray-600 py-2">Scuba</a>
+            <a href="plp.html" class="text-gray-600 py-2">Aksesoris</a>
+            <a href="plp.html" class="text-gray-600 py-2">Sale</a>
+        </div>
+    </div>
+
+    <!-- Page Title -->
+    <div class="text-center py-8">
+        <h1 class="text-2xl lg:text-3xl font-semibold">Keranjang Belanja</h1>
+    </div>
+
+    <!-- Cart Content -->
+    <div class="max-w-7xl mx-auto px-4 pb-12">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Cart Items -->
+            <div class="flex-1">
+                <!-- Cart Item 1 -->
+                <div class="flex gap-4 py-6 border-b border-gray-200 bg-white px-4 mb-4">
+                    <div class="w-24 h-32 lg:w-28 lg:h-36 bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs flex-shrink-0">Img</div>
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-medium">Masker Freediving Pro</h3>
+                            <p class="text-gray-600 text-xs mt-1">Warna: Hitam</p>
+                        </div>
+                        <div class="flex items-center gap-4 mt-2">
+                            <div class="flex items-center border border-gray-300">
+                                <button class="px-3 py-1 hover:bg-gray-100">−</button>
+                                <span class="px-3 py-1 border-x border-gray-300">1</span>
+                                <button class="px-3 py-1 hover:bg-gray-100">+</button>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500 text-lg">✕</button>
+                        </div>
+                    </div>
+                    <div class="font-semibold text-right">Rp 850.000</div>
+                </div>
+
+                <!-- Cart Item 2 -->
+                <div class="flex gap-4 py-6 border-b border-gray-200 bg-white px-4">
+                    <div class="w-24 h-32 lg:w-28 lg:h-36 bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs flex-shrink-0">Img</div>
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-medium">Fin Carbón Pro</h3>
+                            <p class="text-gray-600 text-xs mt-1">Ukuran: 42-43 | Warna: Hitam</p>
+                        </div>
+                        <div class="flex items-center gap-4 mt-2">
+                            <div class="flex items-center border border-gray-300">
+                                <button class="px-3 py-1 hover:bg-gray-100">−</button>
+                                <span class="px-3 py-1 border-x border-gray-300">1</span>
+                                <button class="px-3 py-1 hover:bg-gray-100">+</button>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500 text-lg">✕</button>
+                        </div>
+                    </div>
+                    <div class="font-semibold text-right">Rp 2.500.000</div>
+                </div>
+
+                <a href="plp.html" class="inline-block mt-6 text-sm text-gray-600 border-b border-gray-300 hover:border-brand">← Lanjut Belanja</a>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="w-full lg:w-80 bg-gray-100 p-6 h-fit">
+                <h2 class="font-semibold mb-6 pb-4 border-b border-gray-300">Ringkasan Pesanan</h2>
+                
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-sm">
+                        <span>Subtotal (2 item)</span>
+                        <span>Rp 3.350.000</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span>Ongkos Kirim</span>
+                        <span class="text-green-600">Gratis</span>
+                    </div>
+                    <p class="text-xs text-gray-400">Dihitung saat checkout</p>
+                </div>
+
+                <div class="border-t border-b border-gray-300 py-4 my-4">
+                    <p class="text-sm font-medium mb-2">Kode Promo</p>
+                    <div class="flex gap-2">
+                        <input type="text" placeholder="Masukkan kode" class="flex-1 px-3 py-2 border border-gray-300 text-sm">
+                        <button class="px-4 py-2 bg-white border border-gray-300 text-xs hover:border-brand">Terapkan</button>
+                    </div>
+                </div>
+
+                <div class="flex justify-between font-semibold text-lg mb-6">
+                    <span>Total</span>
+                    <span>Rp 3.350.000</span>
+                </div>
+
+                <a href="checkout.html" class="block w-full bg-brand text-white py-4 text-center text-xs uppercase tracking-wider hover:bg-gray-700">
+                    Lanjut ke Checkout
+                </a>
+
+                <div class="flex justify-center gap-4 mt-4 pt-4 border-t border-gray-300 text-xs text-gray-600">
+                    <span>🔒 Pembayaran Aman</span>
+                    <span>🛡️ Garansi 100%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 py-12 px-4 bg-gray-50">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div>
+                <h5 class="text-xs uppercase tracking-wider font-semibold mb-4">Newsletter</h5>
+                <p class="text-xs text-gray-600 mb-3">Dapatkan info produk terbaru</p>
+                <input type="email" placeholder="Email Anda" class="w-full px-3 py-2 border border-gray-300 mb-2 text-sm">
+                <button class="w-full bg-brand text-white px-3 py-2 text-xs uppercase">Langganan</button>
+            </div>
+            <div>
+                <h5 class="text-xs uppercase tracking-wider font-semibold mb-4">Belanja</h5>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="plp.html" class="text-gray-600 hover:text-brand">Freediving</a></li>
+                    <li><a href="plp.html" class="text-gray-600 hover:text-brand">Scuba</a></li>
+                    <li><a href="plp.html" class="text-gray-600 hover:text-brand">Aksesoris</a></li>
+                    <li><a href="plp.html" class="text-gray-600 hover:text-brand">Sale</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-xs uppercase tracking-wider font-semibold mb-4">Bantuan</h5>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="faq.html" class="text-gray-600 hover:text-brand">FAQ</a></li>
+                    <li><a href="contact.html" class="text-gray-600 hover:text-brand">Hubungi Kami</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-xs uppercase tracking-wider font-semibold mb-4">Tentang</h5>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="about.html" class="text-gray-600 hover:text-brand">Tentang Kami</a></li>
+                    <li><a href="privacy.html" class="text-gray-600 hover:text-brand">Kebijakan Privasi</a></li>
+                    <li><a href="terms.html" class="text-gray-600 hover:text-brand">Syarat & Ketentuan</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center pt-8 mt-8 border-t border-gray-200 text-xs text-gray-600">
+            © 2024 Arnes Dive Shop. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+</html>

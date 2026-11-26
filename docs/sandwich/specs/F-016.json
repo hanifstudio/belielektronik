@@ -1,0 +1,34 @@
+{
+  "featureId": "F-016",
+  "title": "Export orders to CSV/Excel",
+  "module": "Order Management",
+  "description": "Admin exports the filtered order list to CSV or Excel.",
+  "scope": {
+    "inScope": [
+      "Export the current (filtered) order list to CSV",
+      "Export to Excel format"
+    ],
+    "outOfScope": [
+      "Scheduled/automated exports"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Admin can export the currently filtered order list to a CSV file",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Admin can export to an Excel file",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-014"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "103"
+  }
+}

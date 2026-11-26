@@ -1,0 +1,40 @@
+{
+  "featureId": "F-004",
+  "title": "Forgot password / reset flow (OTP)",
+  "module": "Authentication",
+  "description": "Customer requests a password reset, receives an OTP via Mailgun, and sets a new password after OTP verification.",
+  "scope": {
+    "inScope": [
+      "Request password reset by email, generate OTP, send via Mailgun",
+      "Verify OTP and allow setting a new password",
+      "Invalidate OTP after use or expiry"
+    ],
+    "outOfScope": [
+      "SMS-based reset"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Customer can request a reset OTP for a registered email",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "A valid, unexpired OTP allows setting a new password",
+      "done": false
+    },
+    {
+      "id": "AC3",
+      "text": "An expired or already-used OTP is rejected",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-002"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "31"
+  }
+}

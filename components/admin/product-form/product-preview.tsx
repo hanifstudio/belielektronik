@@ -1,0 +1,222 @@
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
+import { Icon } from '@iconify/react';
+import type { VariantOption, EditableVariant } from '@/lib/hooks/use-product-form';
+import { formatCurrencyInput } from '@/lib/utils/format';
+import { productImageUrl } from '@/lib/utils/product-image';
+
+interface ProductPreviewProps {
+  name: string;
+  price: string;
+  compareAtPrice: string;
+  category: string;
+  brand: string;
+  description: string;
+  isActive: boolean;
+  isOnSale: boolean;
+  images: string[];
+  variantOptions: VariantOption[];
+  editableVariants?: EditableVariant[];
+}
+
+export function ProductPreview({
+  name,
+  price,
+  compareAtPrice,
+  brand,
+  description,
+  isActive,
+  isOnSale,
+  images,
+  variantOptions,
+  editableVariants = [],
+}: ProductPreviewProps) {
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  // Keyed by URL so a single dead image doesn't blank its siblings, and
+  // functional so simultaneous onError callbacks don't overwrite each other.
+  const markImageFailed = (imageUrl: string) => {
+    setFailedImages(prev => new Set([...prev, imageUrl]));
+  };
+
+  // `images` is a prop, so narrowing `images[0]` in JSX does not survive into
+  // an onError closure — the value has to be captured in a const first.
+  const heroSource = images[0];
+  const hero = heroSource && !failedImages.has(heroSource)
+    ? productImageUrl(heroSource, 'medium')
+    : undefined;
+
+  const formatPrice = (val: string) => (val ? `Rp ${formatCurrencyInput(val)}` : 'Rp 0');
+  const parsePriceValue = (val: string) => parseInt(val.replace(/\D/g, ''), 10) || 0;
+
+  const hasVariants = variantOptions.length > 0 && variantOptions.some(opt => opt.name && opt.values.some(v => v.value));
+
+  // When variants exist, compute the minimum price from active editable variants
+  const variantMinPrice = hasVariants
+    ? (() => {
+        const activePrices = editableVariants
+          .filter(v => v.isActive && v.price)
+          .map(v => parsePriceValue(v.price))
+          .filter(p => p > 0);
+        if (activePrices.length === 0) return null;
+        return Math.min(...activePrices);
+      })()
+    : null;
+
+  const hasVariantPriceRange = hasVariants && variantMinPrice !== null && (() => {
+    const prices = editableVariants
+      .filter(v => v.isActive && v.price)
+      .map(v => parsePriceValue(v.price))
+      .filter(p => p > 0);
+    return prices.length > 1 && Math.min(...prices) !== Math.max(...prices);
+  })();
+
+  // Only treat compareAtPrice as a real discount if it's actually higher than the selling price —
+  // otherwise a mistyped value would show an inverted "discount".
+  // Discount only applies to non-variant products (variants don't support compare-at).
+  const hasDiscount = !hasVariants && compareAtPrice !== '' && parsePriceValue(compareAtPrice) > parsePriceValue(price);
+
+  return (
+    <div>
+      <div className="bg-white rounded-xl overflow-hidden">
+        <div className="p-4 border-b border-neutral-100">
+          <h3 className="text-xs font-medium text-neutral-500 uppercase tracking-wide">Preview</h3>
+        </div>
+
+        <div className="p-4">
+          {/* Image Gallery */}
+          <div className="aspect-square bg-neutral-100 rounded-lg overflow-hidden relative mb-3">
+            {hero ? (
+              <Image
+                src={hero}
+                alt={name || 'Product preview'}
+                fill
+                className="object-cover"
+                sizes="320px"
+                onError={() => markImageFailed(heroSource!)}
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center text-neutral-400">
+                <Icon icon="solar:box-linear" className="w-10 h-10" />
+              </div>
+            )}
+            {!isActive && (
+              <span className="absolute top-2 left-2 px-2 py-0.5 text-[10px] uppercase tracking-wider bg-neutral-200 text-neutral-600 rounded">
+                Nonaktif
+              </span>
+            )}
+            {isOnSale && (
+              <span className="absolute top-2 right-2 px-2 py-0.5 text-[10px] uppercase tracking-wider bg-red-500 text-white rounded">
+                Sale
+              </span>
+            )}
+          </div>
+
+          {/* Thumbnail strip */}
+          <div className="flex gap-2 mb-4">
+            {[0, 1, 2, 3].map((i) => {
+              const thumbnailSource = images[i];
+              const thumbnail = thumbnailSource && !failedImages.has(thumbnailSource)
+                ? productImageUrl(thumbnailSource, 'thumb')
+                : undefined;
+
+              return (
+              <div
+                key={i}
+                className={`w-12 h-12 rounded flex-shrink-0 overflow-hidden ${
+                  i === 0 ? 'border border-neutral-900' : 'border border-neutral-200'
+                }`}
+              >
+                {thumbnail ? (
+                  <Image
+                    src={thumbnail}
+                    alt={`Thumbnail ${i + 1}`}
+                    width={48}
+                    height={48}
+                    className="object-cover w-full h-full"
+                    onError={() => markImageFailed(thumbnailSource!)}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-neutral-300 text-[10px]">
+                    {i + 1}
+                  </div>
+                )}
+              </div>
+              );
+            })}
+          </div>
+
+          {/* Vendor */}
+          <p className="text-[10px] uppercase tracking-widest text-neutral-400 mb-1">
+            {brand || 'Merek'}
+          </p>
+
+          {/* Title */}
+          <h1 className="text-lg font-bold tracking-tight text-neutral-900 mb-2 truncate">
+            {name || 'Nama Produk'}
+          </h1>
+
+          {/* Price */}
+          <p className="text-base font-semibold tracking-tight mb-4">
+            {hasVariants && variantMinPrice !== null ? (
+              <>
+                {hasVariantPriceRange && (
+                  <span className="text-[10px] text-neutral-500 uppercase tracking-wide block">Mulai dari</span>
+                )}
+                {formatPrice(variantMinPrice.toString())}
+              </>
+            ) : hasDiscount ? (
+              <>
+                <span className="text-red-500">{formatPrice(price)}</span>{' '}
+                <s className="text-neutral-400 font-normal text-sm">{formatPrice(compareAtPrice)}</s>
+              </>
+            ) : (
+              formatPrice(price)
+            )}
+          </p>
+
+          {/* Variant Selection */}
+          {hasVariants && (
+            <div className="mb-4">
+              {variantOptions.map((option) => (
+                option.name && option.values.some(v => v.value) && (
+                  <div key={option.id}>
+                    <p className="text-[10px] uppercase tracking-widest text-neutral-600 font-medium mb-2">
+                      {option.name}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {option.values.filter(v => v.value).map((v) => (
+                        <button
+                          key={v.id}
+                          type="button"
+                          className="min-w-[40px] h-10 px-3 rounded-md border border-neutral-300 text-xs font-medium hover:border-neutral-900 transition-colors"
+                        >
+                          {v.value}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )
+              ))}
+            </div>
+          )}
+
+          {/* Description Accordion */}
+          <div className="border-t border-neutral-200">
+            <details open className="border-b border-neutral-200">
+              <summary className="py-3 cursor-pointer text-xs font-medium flex justify-between items-center">
+                Deskripsi
+                <Icon icon="solar:alt-arrow-up-linear" className="w-4 h-4" />
+              </summary>
+              <p className="pb-3 text-neutral-600 text-xs leading-relaxed line-clamp-3">
+                {description || 'Deskripsi produk akan muncul di sini...'}
+              </p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,42 @@
+{
+  "featureId": "F-010",
+  "title": "Server-side shopping cart (persistence, add/remove/update, real-time totals)",
+  "module": "Shopping Cart",
+  "description": "Cart persisted to the database for logged-in users, add/remove/update items with quantity validation, real-time total calculation, synced with the existing Zustand client store.",
+  "scope": {
+    "inScope": [
+      "Server-side cart storage for logged-in users",
+      "Cart persistence across sessions",
+      "Add/remove/update cart items with quantity validation",
+      "Real-time cart total calculation"
+    ],
+    "outOfScope": [
+      "Guest cart persistence beyond the client-side Zustand store"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "A logged-in customer's cart persists across sessions",
+      "done": true
+    },
+    {
+      "id": "AC2",
+      "text": "Adding, removing, and updating quantity all reflect correctly in the cart total",
+      "done": true
+    },
+    {
+      "id": "AC3",
+      "text": "Quantity cannot be set below 1 or above a sane validated max",
+      "done": true
+    }
+  ],
+  "dependsOn": [
+    "F-001",
+    "F-002"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "58-62"
+  }
+}

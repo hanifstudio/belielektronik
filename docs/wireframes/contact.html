@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubungi Kami - Arnes Dive Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { brand: '#333333' } } } }</script>
+</head>
+<body class="font-sans text-sm bg-gray-50 min-h-screen">
+    <div class="bg-gray-200 py-2 text-center text-xs">Gratis Ongkir</div>
+    <nav class="flex items-center justify-between px-4 py-4 border-b bg-white max-w-7xl mx-auto">
+        <div class="hidden lg:flex gap-6">
+            <a href="homepage.html" class="text-gray-600 hover:text-brand text-sm">Beranda</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Freediving</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Scuba</a>
+        </div>
+        <a href="homepage.html" class="text-2xl font-bold text-brand">ARNES DIVE</a>
+        <div class="flex gap-4 text-gray-600 text-sm">
+            <a href="cart.html" class="hover:text-brand">[Keranjang]</a>
+        </div>
+    </nav>
+
+    <div class="text-center py-12 px-4">
+        <h1 class="text-3xl font-semibold mb-2">Hubungi Kami</h1>
+        <p class="text-gray-600">Ada pertanyaan? Kami siap membantu Anda.</p>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 pb-12">
+        <div class="flex flex-col md:flex-row gap-8">
+            <form class="flex-1 bg-white p-6 border">
+                <div class="mb-4">
+                    <label class="block text-xs text-gray-600 mb-1">Nama Lengkap</label>
+                    <input type="text" class="w-full px-3 py-2 border text-sm focus:border-brand focus:outline-none">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs text-gray-600 mb-1">Email</label>
+                    <input type="email" class="w-full px-3 py-2 border text-sm focus:border-brand focus:outline-none">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs text-gray-600 mb-1">Subjek</label>
+                    <select class="w-full px-3 py-2 border text-sm bg-white"><option>Pesanan</option><option>Pengiriman</option><option>Lainnya</option></select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs text-gray-600 mb-1">Pesan</label>
+                    <textarea class="w-full px-3 py-2 border text-sm h-24 focus:border-brand focus:outline-none"></textarea>
+                </div>
+                <button class="w-full bg-brand text-white py-2 text-xs uppercase">Kirim Pesan</button>
+            </form>
+
+            <div class="md:w-72 space-y-4">
+                <div class="bg-gray-100 p-6">
+                    <h3 class="font-semibold mb-3">Informasi Kontak</h3>
+                    <p class="text-xs text-gray-600">Jam Operasional</p>
+                    <p class="text-sm mb-2">Senin - Jumat: 09:00 - 17:00 WIB</p>
+                    <p class="text-xs text-gray-600">WhatsApp</p>
+                    <p class="text-sm mb-2">+62 812-3456-7890</p>
+                    <p class="text-xs text-gray-600">Email</p>
+                    <p class="text-sm">support@arnesdive.com</p>
+                    <a href="#" class="flex items-center justify-center gap-2 bg-green-500 text-white py-2 mt-4 text-sm font-medium hover:bg-green-600">💬 Chat WhatsApp</a>
+                </div>
+                <a href="faq.html" class="block text-center py-3 border hover:bg-gray-100">📖 Pertanyaan umum? Lihat FAQ →</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

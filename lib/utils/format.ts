@@ -1,0 +1,140 @@
+/**
+ * Format cents to a currency string.
+ *
+ * CONVENTION: All prices in the database are stored as cents.
+ * - IDR: Rp 850.000 is stored as 85000000 (1 Rupiah = 100 cents, no decimals shown)
+ * - USD: $12.50 is stored as 1250 (1 dollar = 100 cents, PayPal/international orders)
+ *
+ * @param cents - Amount in cents
+ * @param currency - 'IDR' (default, local/Midtrans orders) or 'USD' (international/PayPal orders)
+ * @returns Formatted currency string (e.g., "Rp850.000" or "$12.50")
+ */
+export function formatCurrency(cents: number, currency: 'IDR' | 'USD' = 'IDR'): string {
+  if (currency === 'USD') {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(cents / 100);
+  }
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  }).format(cents / 100);
+}
+
+// Alias for clarity in some contexts
+export const formatRupiah = formatCurrency;
+
+// Formats a raw numeric input value with thousands separators as the user types
+// (e.g. admin form fields for price). Distinct from formatRupiah/formatCurrency,
+// which render a finalized amount for read-only display.
+export function formatCurrencyInput(value: string | number): string {
+  const digits = typeof value === 'string' ? value.replace(/\D/g, '') : String(value);
+  if (!digits) return '';
+  return parseInt(digits, 10).toLocaleString('id-ID');
+}
+
+export function formatDate(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return new Intl.DateTimeFormat('id-ID', {
+    dateStyle: 'long',
+  }).format(d);
+}
+
+export function formatDateTime(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return new Intl.DateTimeFormat('id-ID', {
+    dateStyle: 'long',
+    timeStyle: 'short',
+  }).format(d);
+}
+
+/**
+ * Convert an ALL CAPS string (e.g. city/province names from the RajaOngkir API,
+ * snapshotted verbatim onto orders at checkout) into Title Case for display.
+ * Tokens of 3 chars or fewer are kept upper-case since they're usually
+ * abbreviations in Indonesian region names (e.g. "DKI", "DI").
+ */
+export function toTitleCase(value: string): string {
+  return value
+    .split(' ')
+    .map((word) => {
+      if (word.length === 0) return word;
+      if (word.length <= 3) return word.toUpperCase();
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(' ');
+}
+
+/**
+ * Format Indonesian phone number for display (e.g., "0812-3456-7890")
+ * Takes a raw phone number and formats it with dashes for readability.
+ */
+export function formatPhoneDisplay(phone: string): string {
+  // Remove all non-digits
+  const digits = phone.replace(/\D/g, '');
+  
+  // Handle different formats
+  let normalized = digits;
+  if (digits.startsWith('62') && digits.length >= 10) {
+    normalized = '0' + digits.slice(2);
+  }
+  
+  // Format: 0812-3456-7890 or 0812-3456-789 (for shorter numbers)
+  if (normalized.length === 11 || normalized.length === 12) {
+    return normalized.replace(/^(\d{4})(\d{4})(\d+)$/, '$1-$2-$3');
+  }
+  if (normalized.length === 10) {
+    return normalized.replace(/^(\d{3})(\d{3})(\d{4})$/, '$1-$2-$3');
+  }
+  
+  // Return as-is if doesn't match expected patterns
+  return phone;
+}
+
+/**
+ * Format phone number as user types (for input fields)
+ * Returns a formatted string like "0812-3456-7890"
+ */
+export function formatPhoneInput(value: string): string {
+  // Remove all non-digits
+  const digits = value.replace(/\D/g, '');
+  
+  if (digits.length === 0) return '';
+  
+  // Limit to 13 digits (for numbers like +62...)
+  const limited = digits.slice(0, 13);
+  
+  // Format with dashes as user types
+  if (limited.length <= 4) return limited;
+  if (limited.length <= 8) return `${limited.slice(0, 4)}-${limited.slice(4)}`;
+  return `${limited.slice(0, 4)}-${limited.slice(4, 8)}-${limited.slice(8)}`;
+}
+
+/**
+ * Normalize a phone number for WhatsApp wa.me links.
+ * Converts to international format without + sign:
+ * - "0812-3456-7890" → "6281234567890"
+ * - "6281234567890" → "6281234567890" (unchanged)
+ * - "+6281234567890" → "6281234567890"
+ */
+export function normalizeWhatsAppNumber(phone: string): string {
+  // Remove all non-digits
+  const digits = phone.replace(/\D/g, '');
+  
+  if (digits.length === 0) return '';
+  
+  // If starts with 62, it's already in international format
+  if (digits.startsWith('62')) {
+    return digits;
+  }
+  
+  // If starts with 0, convert to international format (Indonesian numbers)
+  if (digits.startsWith('0')) {
+    return '62' + digits.slice(1);
+  }
+  
+  // Otherwise return as-is (might be a different format)
+  return digits;
+}

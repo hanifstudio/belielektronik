@@ -1,0 +1,323 @@
+import { db, checkoutSessions } from '@/lib/db';
+import { eq, and, gt } from 'drizzle-orm';
+import { getCartWithItems, type CartWithItems } from './cart';
+
+const CHECKOUT_SESSION_DURATION_HOURS = 24;
+
+export interface CheckoutSessionWithCart {
+  id: string;
+  userId: string | null;
+  guestId: string | null;
+  cartId: string | null;
+  email: string;
+  phone: string;
+  fullName: string;
+  // Shipping address
+  address1: string;
+  address2: string | null;
+  notes: string | null;
+  // Destination country - 'ID' uses the RajaOngkir fields, else the generic ones
+  countryCode: string;
+  country: string;
+  // RajaOngkir destination (domestic only)
+  rajaongkirCityId: string | null;
+  rajaongkirCityName: string | null;
+  rajaongkirProvince: string | null;
+  rajaongkirCity: string | null;
+  rajaongkirDistrict: string | null;
+  rajaongkirSubdistrict: string | null;
+  rajaongkirPostalCode: string | null;
+  // Generic destination (international only)
+  city: string | null;
+  province: string | null;
+  postalCode: string | null;
+  // Totals
+  shippingMethod: string | null;
+  subtotalCents: number | null;
+  shippingCents: number | null;
+  totalCents: number | null;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  expiresAt: Date | null;
+  cart: Awaited<ReturnType<typeof getCartWithItems>> | null;
+}
+
+export interface CreateCheckoutSessionInput {
+  userId?: string;
+  guestId?: string;
+  cartId?: string;
+  email: string;
+  phone: string;
+  fullName: string;
+  address1: string;
+  address2?: string;
+  notes?: string;
+  countryCode?: string;
+  country?: string;
+  rajaongkirCityId?: string;
+  rajaongkirCityName?: string;
+  rajaongkirProvince?: string;
+  rajaongkirCity?: string;
+  rajaongkirDistrict?: string;
+  rajaongkirSubdistrict?: string;
+  rajaongkirPostalCode?: string;
+  city?: string;
+  province?: string;
+  postalCode?: string;
+  shippingMethod?: string;
+}
+
+export interface UpdateCheckoutSessionInput {
+  shippingMethod?: string;
+  notes?: string;
+  countryCode?: string;
+  country?: string;
+  rajaongkirCityId?: string;
+  rajaongkirCityName?: string;
+  rajaongkirProvince?: string;
+  rajaongkirCity?: string;
+  rajaongkirDistrict?: string;
+  rajaongkirSubdistrict?: string;
+  rajaongkirPostalCode?: string;
+  city?: string;
+  province?: string;
+  postalCode?: string;
+}
+
+/**
+ * Create a new checkout session
+ */
+export async function createCheckoutSession(
+  data: CreateCheckoutSessionInput
+): Promise<CheckoutSessionWithCart> {
+  const expiresAt = new Date();
+  expiresAt.setHours(expiresAt.getHours() + CHECKOUT_SESSION_DURATION_HOURS);
+
+  const [session] = await db
+    .insert(checkoutSessions)
+    .values({
+      userId: data.userId || null,
+      guestId: data.guestId || null,
+      cartId: data.cartId || null,
+      email: data.email,
+      phone: data.phone,
+      fullName: data.fullName,
+      address1: data.address1,
+      address2: data.address2 || null,
+      notes: data.notes || null,
+      countryCode: data.countryCode || undefined,
+      country: data.country || undefined,
+      rajaongkirCityId: data.rajaongkirCityId || null,
+      rajaongkirCityName: data.rajaongkirCityName || null,
+      rajaongkirProvince: data.rajaongkirProvince || null,
+      rajaongkirCity: data.rajaongkirCity || null,
+      rajaongkirDistrict: data.rajaongkirDistrict || null,
+      rajaongkirSubdistrict: data.rajaongkirSubdistrict || null,
+      rajaongkirPostalCode: data.rajaongkirPostalCode || null,
+      city: data.city || null,
+      province: data.province || null,
+      postalCode: data.postalCode || null,
+      shippingMethod: data.shippingMethod || null,
+      expiresAt,
+    })
+    .returning();
+
+  if (!session) {
+    throw new Error('Failed to create checkout session');
+  }
+
+  let cart: CartWithItems | null = null;
+  if (data.cartId) {
+    cart = await getCartWithItems(data.cartId);
+  }
+
+  return {
+    ...session,
+    cart,
+  };
+}
+
+/**
+ * Get checkout session by ID
+ */
+export async function getCheckoutSessionById(
+  sessionId: string
+): Promise<CheckoutSessionWithCart | null> {
+  const session = await db.query.checkoutSessions.findFirst({
+    where: eq(checkoutSessions.id, sessionId),
+  });
+
+  if (!session) {
+    return null;
+  }
+
+  let cart: CartWithItems | null = null;
+  if (session.cartId) {
+    cart = await getCartWithItems(session.cartId);
+  }
+
+  return {
+    ...session,
+    cart,
+  };
+}
+
+/**
+ * Get checkout session by user ID
+ */
+export async function getCheckoutSessionByUserId(
+  userId: string
+): Promise<CheckoutSessionWithCart | null> {
+  const session = await db.query.checkoutSessions.findFirst({
+    where: and(
+      eq(checkoutSessions.userId, userId),
+      eq(checkoutSessions.status, 'pending'),
+      gt(checkoutSessions.expiresAt, new Date())
+    ),
+    orderBy: (sessions, { desc }) => [desc(sessions.createdAt)],
+  });
+
+  if (!session) {
+    return null;
+  }
+
+  let cart: CartWithItems | null = null;
+  if (session.cartId) {
+    cart = await getCartWithItems(session.cartId);
+  }
+
+  return {
+    ...session,
+    cart,
+  };
+}
+
+/**
+ * Get checkout session by guest ID
+ */
+export async function getCheckoutSessionByGuestId(
+  guestId: string
+): Promise<CheckoutSessionWithCart | null> {
+  const session = await db.query.checkoutSessions.findFirst({
+    where: and(
+      eq(checkoutSessions.guestId, guestId),
+      eq(checkoutSessions.status, 'pending'),
+      gt(checkoutSessions.expiresAt, new Date())
+    ),
+    orderBy: (sessions, { desc }) => [desc(sessions.createdAt)],
+  });
+
+  if (!session) {
+    return null;
+  }
+
+  let cart: CartWithItems | null = null;
+  if (session.cartId) {
+    cart = await getCartWithItems(session.cartId);
+  }
+
+  return {
+    ...session,
+    cart,
+  };
+}
+
+/**
+ * Update checkout session
+ */
+export async function updateCheckoutSession(
+  sessionId: string,
+  data: UpdateCheckoutSessionInput
+): Promise<CheckoutSessionWithCart | null> {
+  const [session] = await db
+    .update(checkoutSessions)
+    .set({
+      ...data,
+      updatedAt: new Date(),
+    })
+    .where(eq(checkoutSessions.id, sessionId))
+    .returning();
+
+  if (!session) {
+    return null;
+  }
+
+  let cart: CartWithItems | null = null;
+  if (session.cartId) {
+    cart = await getCartWithItems(session.cartId);
+  }
+
+  return {
+    ...session,
+    cart,
+  };
+}
+
+/**
+ * Update checkout session totals
+ */
+export async function updateCheckoutSessionTotals(
+  sessionId: string,
+  totals: {
+    subtotalCents: number;
+    shippingCents: number;
+    totalCents: number;
+  }
+): Promise<void> {
+  await db
+    .update(checkoutSessions)
+    .set({
+      ...totals,
+      updatedAt: new Date(),
+    })
+    .where(eq(checkoutSessions.id, sessionId));
+}
+
+/**
+ * Mark checkout session as completed (payment confirmed by webhook)
+ */
+export async function completeCheckoutSession(sessionId: string): Promise<void> {
+  await db
+    .update(checkoutSessions)
+    .set({
+      status: 'completed',
+      updatedAt: new Date(),
+    })
+    .where(eq(checkoutSessions.id, sessionId));
+}
+
+/**
+ * Mark checkout session as having a payment attempt in flight
+ * (Snap transaction created, awaiting webhook confirmation)
+ */
+export async function markCheckoutSessionPaymentPending(sessionId: string): Promise<void> {
+  await db
+    .update(checkoutSessions)
+    .set({
+      status: 'payment_pending',
+      updatedAt: new Date(),
+    })
+    .where(eq(checkoutSessions.id, sessionId));
+}
+
+/**
+ * Revert checkout session back to 'pending' after a failed/expired payment,
+ * so the user can retry and the session becomes editable again.
+ */
+export async function revertCheckoutSessionToPending(sessionId: string): Promise<void> {
+  await db
+    .update(checkoutSessions)
+    .set({
+      status: 'pending',
+      updatedAt: new Date(),
+    })
+    .where(eq(checkoutSessions.id, sessionId));
+}
+
+/**
+ * Delete checkout session
+ */
+export async function deleteCheckoutSession(sessionId: string): Promise<void> {
+  await db.delete(checkoutSessions).where(eq(checkoutSessions.id, sessionId));
+}

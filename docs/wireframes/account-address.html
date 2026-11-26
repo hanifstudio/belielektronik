@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alamat - Arnes Dive Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { brand: '#333333' } } } }</script>
+</head>
+<body class="font-sans text-sm">
+    <div class="bg-gray-200 py-2 text-center text-xs">Gratis Ongkir</div>
+    <nav class="flex items-center justify-between px-4 py-4 border-b bg-white max-w-7xl mx-auto">
+        <div class="hidden lg:flex gap-6">
+            <a href="homepage.html" class="text-gray-600 hover:text-brand text-sm">Beranda</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Freediving</a>
+        </div>
+        <a href="homepage.html" class="text-2xl font-bold text-brand">ARNES DIVE</a>
+        <div class="flex gap-4 text-gray-600 text-sm">
+            <a href="cart.html" class="hover:text-brand">[Keranjang]</a>
+            <a href="account.html" class="hover:text-brand">[Akun]</a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <aside class="w-full lg:w-64 flex-shrink-0">
+                <div class="bg-gray-100 p-6 text-center mb-4">
+                    <div class="w-20 h-20 rounded-full bg-gray-300 mx-auto mb-3 flex items-center justify-center text-3xl text-gray-500">A</div>
+                    <div class="font-medium">Ahmad Diver</div>
+                    <div class="text-xs text-gray-500">ahmad@email.com</div>
+                </div>
+                <nav class="bg-gray-100">
+                    <a href="account.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Dashboard</a>
+                    <a href="account-orders.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Pesanan Saya</a>
+                    <a href="wishlist.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Wishlist</a>
+                    <a href="account-address.html" class="block py-3 px-5 border-l-4 border-brand bg-white font-medium">Alamat</a>
+                    <a href="account-settings.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Pengaturan</a>
+                    <a href="login.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Keluar</a>
+                </nav>
+            </aside>
+
+            <main class="flex-1">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-semibold">Alamat Saya</h1>
+                    <button class="flex items-center gap-2 bg-brand text-white px-4 py-2 text-xs uppercase hover:bg-gray-700">+ Tambah Alamat</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Default Address -->
+                    <div class="bg-white border-2 border-brand p-6 relative">
+                        <span class="absolute top-3 right-3 bg-brand text-white text-[10px] px-2 py-1 uppercase">Utama</span>
+                        <p class="font-medium mb-1">Ahmad Diver</p>
+                        <p class="text-gray-600 text-sm mb-3">+62 812-3456-7890</p>
+                        <p class="text-gray-600 text-sm mb-4">Jl. Sudirman No. 123, RT 05/RW 02<br>Kelurahan Menteng, Jakarta Pusat, DKI Jakarta 10310</p>
+                        <div class="flex gap-3">
+                            <button class="px-3 py-1 border text-xs hover:border-brand">Ubah</button>
+                            <button class="px-3 py-1 border border-red-500 text-red-500 text-xs hover:bg-red-50">Hapus</button>
+                        </div>
+                    </div>
+
+                    <!-- Secondary Address -->
+                    <div class="bg-white border p-6">
+                        <p class="font-medium mb-1">Ahmad Diver</p>
+                        <p class="text-gray-600 text-sm mb-3">+62 812-3456-7890</p>
+                        <p class="text-gray-600 text-sm mb-4">Jl. Gatot Subroto No. 45, Apartment Sudirman Tower Lt. 15<br>Jakarta Selatan, DKI Jakarta 12190</p>
+                        <div class="flex gap-3">
+                            <button class="px-3 py-1 border text-xs hover:border-brand">Jadikan Utama</button>
+                            <button class="px-3 py-1 border text-xs hover:border-brand">Ubah</button>
+                            <button class="px-3 py-1 border border-red-500 text-red-500 text-xs hover:bg-red-50">Hapus</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

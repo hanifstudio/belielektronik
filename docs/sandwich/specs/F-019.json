@@ -1,0 +1,43 @@
+{
+  "featureId": "F-019",
+  "title": "Admin dashboard (sales metrics, revenue chart, top-selling products)",
+  "module": "Admin Dashboard",
+  "description": "Dashboard with sales metrics and charts, revenue reporting by period, and top-selling products analytics.",
+  "scope": {
+    "inScope": [
+      "Stats cards: total sales, orders, customers, revenue",
+      "Revenue chart by time period",
+      "Top-selling products list",
+      "Date range filter for analytics"
+    ],
+    "outOfScope": [
+      "Exportable/scheduled reports beyond the CSV export in Order Management"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Dashboard shows current totals for sales, orders, customers, and revenue",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Admin can view a revenue chart filtered by date range",
+      "done": false
+    },
+    {
+      "id": "AC3",
+      "text": "Admin can see the top-selling products for the selected period",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-002",
+    "F-005",
+    "F-013"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "121-124"
+  }
+}

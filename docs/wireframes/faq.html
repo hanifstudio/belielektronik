@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Arnes Dive Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { brand: '#333333' } } } }</script>
+</head>
+<body class="font-sans text-sm bg-gray-50 min-h-screen">
+    <div class="bg-gray-200 py-2 text-center text-xs">Gratis Ongkir</div>
+    <nav class="flex items-center justify-between px-4 py-4 border-b bg-white max-w-7xl mx-auto">
+        <div class="hidden lg:flex gap-6">
+            <a href="homepage.html" class="text-gray-600 hover:text-brand text-sm">Beranda</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Freediving</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Scuba</a>
+        </div>
+        <a href="homepage.html" class="text-2xl font-bold text-brand">ARNES DIVE</a>
+        <div class="flex gap-4 text-gray-600 text-sm">
+            <a href="cart.html" class="hover:text-brand">[Keranjang]</a>
+        </div>
+    </nav>
+
+    <div class="bg-gray-100 py-12 px-4 text-center">
+        <h1 class="text-3xl font-semibold mb-2">Pusat Bantuan</h1>
+        <p class="text-gray-600 mb-6">Temukan jawaban untuk pertanyaan yang sering diajukan</p>
+        <div class="flex max-w-lg mx-auto">
+            <input type="text" placeholder="Cari pertanyaan Anda..." class="flex-1 px-4 py-3 border text-sm focus:border-brand focus:outline-none">
+            <button class="bg-brand text-white px-6">Cari</button>
+        </div>
+    </div>
+
+    <div class="flex justify-center gap-2 py-4 px-4 border-b overflow-x-auto">
+        <a href="#" class="px-4 py-2 bg-brand text-white text-xs whitespace-nowrap">Semua</a>
+        <a href="#" class="px-4 py-2 border text-xs whitespace-nowrap hover:border-brand">Pengiriman</a>
+        <a href="#" class="px-4 py-2 border text-xs whitespace-nowrap hover:border-brand">Pengembalian</a>
+        <a href="#" class="px-4 py-2 border text-xs whitespace-nowrap hover:border-brand">Pembayaran</a>
+        <a href="#" class="px-4 py-2 border text-xs whitespace-nowrap hover:border-brand">Produk</a>
+    </div>
+
+    <div class="max-w-3xl mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h2 class="font-semibold text-lg mb-4 pb-2 border-b-2 border-brand inline-block">Pengiriman</h2>
+            <div class="border">
+                <details class="border-b">
+                    <summary class="p-4 cursor-pointer hover:bg-gray-50 font-medium">Berapa lama waktu pengiriman?</summary>
+                    <p class="px-4 pb-4 text-gray-600 text-sm">Waktu pengiriman tergantung lokasi dan metode yang dipilih. Reguler 3-5 hari, Express 1-2 hari kerja.</p>
+                </details>
+                <details class="border-b">
+                    <summary class="p-4 cursor-pointer hover:bg-gray-50 font-medium">Bagaimana cara melacak pesanan?</summary>
+                    <p class="px-4 pb-4 text-gray-600 text-sm">Anda akan menerima nomor resi via email/WhatsApp setelah pesanan dikirim.</p>
+                </details>
+                <details>
+                    <summary class="p-4 cursor-pointer hover:bg-gray-50 font-medium">Apakah ada gratis ongkir?</summary>
+                    <p class="px-4 pb-4 text-gray-600 text-sm">Ya, untuk pembelian di atas Rp 500.000.</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="font-semibold text-lg mb-4 pb-2 border-b-2 border-brand inline-block">Pengembalian</h2>
+            <div class="border">
+                <details class="border-b">
+                    <summary class="p-4 cursor-pointer hover:bg-gray-50 font-medium">Bagaimana kebijakan pengembalian?</summary>
+                    <p class="px-4 pb-4 text-gray-600 text-sm">Pengembalian dapat dilakukan dalam 14 hari setelah penerimaan. Produk harus dalam kondisi asli.</p>
+                </details>
+                <details>
+                    <summary class="p-4 cursor-pointer hover:bg-gray-50 font-medium">Berapa lama proses pengembalian dana?</summary>
+                    <p class="px-4 pb-4 text-gray-600 text-sm">3-5 hari kerja setelah produk diterima dan diverifikasi.</p>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-gray-100 py-12 text-center">
+        <h3 class="text-lg font-semibold mb-2">Masih butuh bantuan?</h3>
+        <p class="text-gray-600 text-sm mb-4">Tim customer service kami siap membantu Anda</p>
+        <div class="flex justify-center gap-3">
+            <a href="contact.html" class="px-6 py-2 border border-brand hover:bg-white">Hubungi Kami</a>
+            <a href="#" class="px-6 py-2 bg-green-500 text-white hover:bg-green-600">💬 Chat WhatsApp</a>
+        </div>
+    </div>
+</body>
+</html>

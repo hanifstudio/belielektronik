@@ -1,0 +1,59 @@
+{
+  "stack": [
+    { "layer": "Framework", "choice": "Next.js 16 (App Router)", "rationale": "Already in use, provides ISR for storefront, server actions for mutations" },
+    { "layer": "Language", "choice": "TypeScript (strict mode)", "rationale": "Already configured, ensures type safety across codebase" },
+    { "layer": "Styling", "choice": "Tailwind CSS v4", "rationale": "Already in use, utility-first approach matches existing UI components" },
+    { "layer": "ORM", "choice": "Drizzle ORM", "rationale": "Already configured in package.json, type-safe SQL, lightweight" },
+    { "layer": "Database", "choice": "PostgreSQL (Neon serverless)", "rationale": "Already specified in RFP, serverless-friendly for Next.js" },
+    { "layer": "State Management (Client)", "choice": "Zustand + TanStack Query", "rationale": "Already in use for cart and checkout stores" },
+    { "layer": "Payment", "choice": "Midtrans Snap", "rationale": "Indonesian payment gateway, required by client" },
+    { "layer": "Email Service", "choice": "Mailgun", "rationale": "Client's chosen provider for transactional emails" },
+    { "layer": "File Storage", "choice": "Vercel Blob", "rationale": "Client's chosen provider for product images, integrates seamlessly with Vercel deployment" },
+    { "layer": "UI Components", "choice": "Radix UI primitives", "rationale": "Already in use, accessible headless components" },
+    { "layer": "Forms", "choice": "React Hook Form + Zod", "rationale": "Already configured, schema validation with type inference" },
+    { "layer": "Auth", "choice": "Custom with jose library", "rationale": "jose already in dependencies, JWT-based session management" }
+  ],
+  "architectureNotes": [
+    {
+      "heading": "Vertical Slice Architecture",
+      "body": "SPEC.md prescribes vertical slice architecture where each feature is self-contained. Frontend already follows this pattern. Backend should maintain same structure with domain/application/presentation layers only when complexity warrants it. Simple CRUD features can skip domain layer."
+    },
+    {
+      "heading": "No API routes exist currently",
+      "body": "All backend work is greenfield. The app/(store) and app/admin directories have complete UI but no app/api directory. Need to create all API routes from scratch. Consider using Next.js server actions for mutations (per SPEC.md) and route handlers for queries."
+    },
+    {
+      "heading": "Database schema required",
+      "body": "No lib/db directory exists. SPEC.md documents schema but file not created. Tables needed: users, customers, addresses, categories, brands, products, product_variants, orders, order_items, payments, promotions, banners, verification_tokens. Drizzle migrations need to be generated and run against Neon."
+    },
+    {
+      "heading": "ISR for Storefront, CSR for Admin",
+      "body": "Spec calls for Incremental Static Regeneration for storefront pages (products, categories) for performance. Admin dashboard uses client-side rendering with TanStack Query for real-time data. This split architecture is appropriate for the use case."
+    },
+    {
+      "heading": "Session management approach",
+      "body": "jose library is in dependencies suggesting JWT-based sessions. Store session token in HTTP-only cookie. Session should contain user ID and role for RBAC. Neon serverless is stateless so JWT is appropriate over database sessions."
+    },
+    {
+      "heading": "Guest checkout with auto-registration",
+      "body": "Users can checkout without prior registration. During checkout, contact data (name, email, phone) is collected. Upon successful order completion, a customer account is automatically created using this data. The new customer receives login credentials via email. This reduces friction while still building a customer database."
+    },
+    {
+      "heading": "Simple availability model (no stock quantities)",
+      "body": "Products have an availability flag (available/unavailable) instead of stock quantity tracking. This simplifies the system - no stock deductions, no low-stock alerts, no stock returns on cancellation. Admin manually toggles availability. Suitable for a dive shop where inventory management is handled externally or not needed initially."
+    },
+    {
+      "heading": "No reviews/ratings in initial scope",
+      "body": "Product reviews and ratings are deferred to a future phase. Simplifies product detail pages and removes need for reviews table, moderation workflow, and rating aggregation logic."
+    }
+  ],
+  "risks": [
+    { "text": "Midtrans webhook in sandbox may not match production behavior perfectly - test thoroughly", "severity": "medium" },
+    { "text": "ISR revalidation timing may cause stale product data immediately after admin updates", "severity": "low" },
+    { "text": "Email deliverability to Indonesian ISPs via Mailgun may have issues - verify Mailgun has good regional delivery rates", "severity": "medium" },
+    { "text": "Zustand cart state needs careful sync with server-side cart to avoid client-server mismatch", "severity": "medium" },
+    { "text": "Drizzle ORM with Neon serverless may have connection pooling issues under load - verify connection management", "severity": "low" },
+    { "text": "Auto-registration may create duplicate accounts if guest uses existing email - need email lookup and account linking logic", "severity": "medium" }
+  ],
+  "openDecisions": []
+}

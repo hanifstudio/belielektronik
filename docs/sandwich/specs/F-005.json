@@ -1,0 +1,47 @@
+{
+  "featureId": "F-005",
+  "title": "Product CRUD (images, status, availability, featured)",
+  "module": "Product Management",
+  "description": "Admin product create/update/delete with image upload to Vercel Blob, active/inactive status, availability flag (no stock quantity), and featured-product selection.",
+  "scope": {
+    "inScope": [
+      "Product create/update/delete with Vercel Blob image upload",
+      "Active/inactive status toggle",
+      "Availability flag (available/unavailable) — no stock quantity tracking",
+      "Featured-product selection for homepage/admin"
+    ],
+    "outOfScope": [
+      "Stock/inventory quantity tracking (explicitly dropped by client)",
+      "Product reviews/ratings"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Admin can create a product with images, price (integer cents), category, and brand",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Admin can edit and soft-delete a product",
+      "done": false
+    },
+    {
+      "id": "AC3",
+      "text": "Admin can toggle a product's active/inactive and availability flags",
+      "done": false
+    },
+    {
+      "id": "AC4",
+      "text": "Admin can mark a product as featured",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-001"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "43-50"
+  }
+}

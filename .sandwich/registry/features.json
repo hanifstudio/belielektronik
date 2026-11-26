@@ -1,0 +1,1313 @@
+[
+  {
+    "id": "F-001",
+    "fingerprint": "database schema connection setup|infrastructure",
+    "title": "Database schema & connection setup",
+    "description": "Drizzle ORM schema with all 13 tables (users, customers, addresses, categories, brands, products, product_variants, orders, order_items, payments, promotions, banners, verification_tokens) connected to Neon Postgres. Schema implemented, migrations generated, all tables active in production database.",
+    "type": "infrastructure",
+    "module": "Infrastructure",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "technical-notes.md",
+      "lines": "28-29",
+      "briefHash": "80f05b81d486df94"
+    },
+    "dependsOn": [],
+    "blocks": [
+      "F-002",
+      "F-005",
+      "F-007",
+      "F-008",
+      "F-010",
+      "F-020",
+      "F-021"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 10,
+        "factors": [
+          "Every other backend feature reads/writes through this layer"
+        ]
+      },
+      "effort": {
+        "score": 3,
+        "factors": [
+          "Schema already documented in SPEC.md, well-understood Drizzle setup"
+        ]
+      },
+      "risk": {
+        "score": 3,
+        "factors": [
+          "Neon serverless connection pooling needs verification under load"
+        ]
+      },
+      "urgency": {
+        "factor": 1.5,
+        "reason": "Blocks nearly every other feature in the queue"
+      },
+      "priority": 26,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-001.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T12:12:44.348Z"
+  },
+  {
+    "id": "F-002",
+    "fingerprint": "core authentication registration login session rbac rate limiting|authentication",
+    "title": "Core authentication (registration, login, session, RBAC, rate limiting)",
+    "description": "Custom JWT session auth via jose: email/password registration with validation, secure login with HTTP-only cookie sessions, role-based access control (customer/admin/super_admin), and rate limiting on auth endpoints.",
+    "type": "feature",
+    "module": "Authentication",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "29-34",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-001"
+    ],
+    "blocks": [
+      "F-003",
+      "F-004",
+      "F-010",
+      "F-011",
+      "F-014",
+      "F-017",
+      "F-018",
+      "F-019",
+      "F-021",
+      "F-022"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 9,
+        "factors": [
+          "Gates every account-scoped and admin-scoped feature"
+        ]
+      },
+      "effort": {
+        "score": 6,
+        "factors": [
+          "JWT/jose session wiring, RBAC middleware, rate limiting all new"
+        ]
+      },
+      "risk": {
+        "score": 4,
+        "factors": [
+          "Session/security correctness is high-stakes if done wrong"
+        ]
+      },
+      "urgency": {
+        "factor": 1.5,
+        "reason": "Blocks checkout, admin dashboard, and account features"
+      },
+      "priority": 10,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-002.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-003",
+    "fingerprint": "email verification otp for new accounts|authentication",
+    "title": "Email verification (OTP) for new accounts",
+    "description": "New accounts start unverified; system sends an OTP via Mailgun that the customer must confirm before full access.",
+    "type": "feature",
+    "module": "Authentication",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "32",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-002"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 6,
+        "factors": [
+          "Confirms real email ownership, stated requirement"
+        ]
+      },
+      "effort": {
+        "score": 4,
+        "factors": [
+          "OTP generation/expiry + Mailgun send, moderate scope"
+        ]
+      },
+      "risk": {
+        "score": 3,
+        "factors": [
+          "Well-understood OTP pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Not on the checkout-conversion critical path"
+      },
+      "priority": 8,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-003.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-004",
+    "fingerprint": "forgot password reset flow otp|authentication",
+    "title": "Forgot password / reset flow (OTP)",
+    "description": "Customer requests a password reset, receives an OTP via Mailgun, and sets a new password after OTP verification.",
+    "type": "feature",
+    "module": "Authentication",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "31",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-002"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 6,
+        "factors": [
+          "Required account-recovery path, stated requirement"
+        ]
+      },
+      "effort": {
+        "score": 4,
+        "factors": [
+          "OTP generation/expiry + Mailgun send + password reset, moderate scope"
+        ]
+      },
+      "risk": {
+        "score": 3,
+        "factors": [
+          "Well-understood OTP pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Not on the checkout-conversion critical path"
+      },
+      "priority": 8,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-004.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-005",
+    "fingerprint": "product crud images status availability featured|product management",
+    "title": "Product CRUD (images, status, availability, featured)",
+    "description": "Admin product create/update/delete with image upload to Vercel Blob, active/inactive status, availability flag (no stock quantity), and featured-product selection.",
+    "type": "feature",
+    "module": "Product Management",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "43-50",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-001"
+    ],
+    "blocks": [
+      "F-006",
+      "F-009",
+      "F-011",
+      "F-012",
+      "F-013",
+      "F-019"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 9,
+        "factors": [
+          "Core catalog data everything else (cart, checkout, orders, search) reads from"
+        ]
+      },
+      "effort": {
+        "score": 6,
+        "factors": [
+          "Vercel Blob upload integration plus full CRUD wiring to existing admin UI"
+        ]
+      },
+      "risk": {
+        "score": 3,
+        "factors": [
+          "Well-understood CRUD pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1.5,
+        "reason": "Blocks variants, search, checkout, orders, dashboard"
+      },
+      "priority": 12,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-005.json",
+    "commits": [
+      "9d3caf6",
+      "f2ed68b",
+      "54c1c44",
+      "c5306f1",
+      "3d4e16a",
+      "e89e0e2",
+      "e9cec00",
+      "da7a466",
+      "5cd060c",
+      "843065e",
+      "8d0a188",
+      "5a19448"
+    ],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T12:42:00.000Z"
+  },
+  {
+    "id": "F-006",
+    "fingerprint": "product variants size color with individual pricing|product management",
+    "title": "Product variants (size, color) with individual pricing",
+    "description": "Products support variants such as size and color, each with its own price.",
+    "type": "feature",
+    "module": "Product Management",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "44",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-005"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 6,
+        "factors": [
+          "Needed for products that come in sizes/colors"
+        ]
+      },
+      "effort": {
+        "score": 5,
+        "factors": [
+          "Variant table + pricing per variant, moderate admin UI wiring"
+        ]
+      },
+      "risk": {
+        "score": 3,
+        "factors": [
+          "Well-understood pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Extends product CRUD, not independently blocking"
+      },
+      "priority": 6,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-006.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-007",
+    "fingerprint": "category management hierarchical|product management",
+    "title": "Category management (hierarchical)",
+    "description": "Admin CRUD for product categories with hierarchical structure. API routes at /api/categories support full CRUD with parent-child relationships. Admin page at /admin/categories displays hierarchical tree with expand/collapse. Storefront header navigation shows categories with dropdown menus for subcategories.",
+    "type": "feature",
+    "module": "Product Management",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "45",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-001"
+    ],
+    "blocks": [
+      "F-009"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 6,
+        "factors": [
+          "Needed for storefront navigation and filtering"
+        ]
+      },
+      "effort": {
+        "score": 4,
+        "factors": [
+          "Hierarchical CRUD, moderate complexity"
+        ]
+      },
+      "risk": {
+        "score": 2,
+        "factors": [
+          "Well-understood pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Feeds search/filtering but not itself on the conversion path"
+      },
+      "priority": 9,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-007.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T14:30:00.000Z"
+  },
+  {
+    "id": "F-008",
+    "fingerprint": "brand management|product management",
+    "title": "Brand management",
+    "description": "Admin CRUD for product brands.",
+    "type": "feature",
+    "module": "Product Management",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "46",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-001"
+    ],
+    "blocks": [
+      "F-009"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 5,
+        "factors": [
+          "Needed for product filtering by brand"
+        ]
+      },
+      "effort": {
+        "score": 2,
+        "factors": [
+          "Flat CRUD, no hierarchy"
+        ]
+      },
+      "risk": {
+        "score": 2,
+        "factors": [
+          "Trivial, well-understood pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Feeds search/filtering but not itself on the conversion path"
+      },
+      "priority": 15,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-008.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-009",
+    "fingerprint": "product search filtering|product management",
+    "title": "Product search & filtering",
+    "description": "MISSING: No search API found. Storefront product search with filters for category, brand, and price range.",
+    "type": "feature",
+    "module": "Product Management",
+    "confidence": "stated",
+    "lifecycle": "queued",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "47",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-005",
+      "F-007",
+      "F-008"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 7,
+        "factors": [
+          "Core product-discovery path for customers"
+        ]
+      },
+      "effort": {
+        "score": 5,
+        "factors": [
+          "Search UI already exists (components/search/), needs backend query wiring"
+        ]
+      },
+      "risk": {
+        "score": 3,
+        "factors": [
+          "Well-understood query pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Important but not blocking other backend work"
+      },
+      "priority": 7,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-009.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-010",
+    "fingerprint": "serverside shopping cart persistence addremoveupdate realtime totals|shopping cart",
+    "title": "Server-side shopping cart (persistence, add/remove/update, real-time totals)",
+    "description": "Cart persisted to the database for logged-in users, add/remove/update items with quantity validation, real-time total calculation, synced with the existing Zustand client store.",
+    "type": "feature",
+    "module": "Shopping Cart",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "58-62",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-001",
+      "F-002"
+    ],
+    "blocks": [
+      "F-011"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 8,
+        "factors": [
+          "Required before checkout can read a real cart"
+        ]
+      },
+      "effort": {
+        "score": 5,
+        "factors": [
+          "DB-backed cart plus API routes, moderate scope"
+        ]
+      },
+      "risk": {
+        "score": 4,
+        "factors": [
+          "Zustand client state must stay in sync with server cart (flagged risk in technical-notes.md)"
+        ]
+      },
+      "urgency": {
+        "factor": 1.5,
+        "reason": "Directly blocks checkout"
+      },
+      "priority": 11,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-010.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-011",
+    "fingerprint": "multistep checkout flow guest checkout autoregistration confirmation|checkout",
+    "title": "Multi-step checkout flow (guest checkout, auto-registration, confirmation)",
+    "description": "PARTIAL: Checkout UI exists at app/(store)/checkout/ but NO API route found. Missing: checkout API to process cart, create order, handle payment. Contact → Shipping → Payment → Confirm checkout with guest checkout and auto-registration.",
+    "type": "feature",
+    "module": "Checkout",
+    "confidence": "stated",
+    "lifecycle": "partial",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "69-75",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-002",
+      "F-005",
+      "F-010"
+    ],
+    "blocks": [
+      "F-012",
+      "F-013",
+      "F-020"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 9,
+        "factors": [
+          "The core conversion path for the whole store"
+        ]
+      },
+      "effort": {
+        "score": 7,
+        "factors": [
+          "Multi-step form, Indonesia address validation, and auto-registration logic all new"
+        ]
+      },
+      "risk": {
+        "score": 5,
+        "factors": [
+          "Auto-registration can create duplicate accounts if guest email already exists (flagged risk in technical-notes.md)"
+        ]
+      },
+      "urgency": {
+        "factor": 1.5,
+        "reason": "Blocks payment and order creation"
+      },
+      "priority": 7,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-011.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-012",
+    "fingerprint": "midtrans payment integration snap va ewallets qris webhook idempotency|payment",
+    "title": "Midtrans payment integration (Snap, VA, e-wallets, QRIS, webhook, idempotency)",
+    "description": "MISSING: No Midtrans integration found. No payment API routes, no webhook handlers. Midtrans Snap checkout supporting cards, VA, e-wallets, QRIS.",
+    "type": "feature",
+    "module": "Payment",
+    "confidence": "stated",
+    "lifecycle": "queued",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "82-90",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-005",
+      "F-011"
+    ],
+    "blocks": [
+      "F-013"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 10,
+        "factors": [
+          "Revenue-critical, required by client for Indonesian market"
+        ]
+      },
+      "effort": {
+        "score": 7,
+        "factors": [
+          "External gateway integration, multiple payment methods, webhook signature verification"
+        ]
+      },
+      "risk": {
+        "score": 6,
+        "factors": [
+          "Midtrans sandbox may not match production behavior exactly (flagged risk in technical-notes.md)",
+          "Payment correctness failures are high-stakes"
+        ]
+      },
+      "urgency": {
+        "factor": 1.5,
+        "reason": "No revenue can be collected without it"
+      },
+      "priority": 6,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-012.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-013",
+    "fingerprint": "order creation from cart atomic transaction|order management",
+    "title": "Order creation from cart (atomic transaction)",
+    "description": "MISSING: No orders API found. Order + orderItems + payment record created atomically on checkout completion.",
+    "type": "feature",
+    "module": "Order Management",
+    "confidence": "stated",
+    "lifecycle": "queued",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "98",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-005",
+      "F-011",
+      "F-012"
+    ],
+    "blocks": [
+      "F-014",
+      "F-017",
+      "F-019",
+      "F-022"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 9,
+        "factors": [
+          "Central write path that order management, customer accounts, dashboard, and email all depend on"
+        ]
+      },
+      "effort": {
+        "score": 5,
+        "factors": [
+          "Transactional pattern is well-documented in technical-notes.md"
+        ]
+      },
+      "risk": {
+        "score": 3,
+        "factors": [
+          "Well-understood DB transaction pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1.5,
+        "reason": "Blocks order management, customer accounts, dashboard, and email"
+      },
+      "priority": 14,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-013.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-014",
+    "fingerprint": "admin order list detail view|order management",
+    "title": "Admin order list & detail view",
+    "description": "Admin order list with filtering (status, date range, search) and order detail view with customer info, items, and payment.",
+    "type": "feature",
+    "module": "Order Management",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "99-100",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-002",
+      "F-013"
+    ],
+    "blocks": [
+      "F-015",
+      "F-016"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 7,
+        "factors": [
+          "Required for admin to fulfill any order"
+        ]
+      },
+      "effort": {
+        "score": 4,
+        "factors": [
+          "Admin UI already exists (app/admin/orders/), needs route handlers + TanStack Query wiring"
+        ]
+      },
+      "risk": {
+        "score": 2,
+        "factors": [
+          "Well-understood CRUD/list pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Depends on orders existing first"
+      },
+      "priority": 10,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-014.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-015",
+    "fingerprint": "order status updates audit trail|order management",
+    "title": "Order status updates & audit trail",
+    "description": "MISSING: No order status API found. Admin updates order status through fulfillment workflow with audit trail.",
+    "type": "feature",
+    "module": "Order Management",
+    "confidence": "stated",
+    "lifecycle": "queued",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "101-102",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-014"
+    ],
+    "blocks": [
+      "F-022"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 7,
+        "factors": [
+          "Required for order fulfillment workflow"
+        ]
+      },
+      "effort": {
+        "score": 3,
+        "factors": [
+          "Status enum transition + audit log table, small scope"
+        ]
+      },
+      "risk": {
+        "score": 2,
+        "factors": [
+          "Well-understood state-machine pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Needed for fulfillment but not itself conversion-blocking"
+      },
+      "priority": 14,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-015.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-016",
+    "fingerprint": "export orders to csvexcel|order management",
+    "title": "Export orders to CSV/Excel",
+    "description": "MISSING: No export functionality found. Admin exports filtered order list to CSV or Excel.",
+    "type": "feature",
+    "module": "Order Management",
+    "confidence": "stated",
+    "lifecycle": "queued",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "103",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-014"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 4,
+        "factors": [
+          "Nice-to-have reporting convenience, not core to fulfillment"
+        ]
+      },
+      "effort": {
+        "score": 2,
+        "factors": [
+          "Small, self-contained export utility"
+        ]
+      },
+      "risk": {
+        "score": 1,
+        "factors": [
+          "Trivial, no external dependencies"
+        ]
+      },
+      "urgency": {
+        "factor": 0.8,
+        "reason": "Not urgent relative to core order flow"
+      },
+      "priority": 11,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-016.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-017",
+    "fingerprint": "customer account profile order history saved addresses|customer management",
+    "title": "Customer account (profile, order history, saved addresses)",
+    "description": "Customer-facing account pages: profile management, order history view, and saved addresses management.",
+    "type": "feature",
+    "module": "Customer Management",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "111-113",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-002",
+      "F-013"
+    ],
+    "blocks": [
+      "F-018"
+    ],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 7,
+        "factors": [
+          "Core self-service surface for returning customers"
+        ]
+      },
+      "effort": {
+        "score": 4,
+        "factors": [
+          "Account UI already exists (app/(store)/account/), needs data wiring"
+        ]
+      },
+      "risk": {
+        "score": 2,
+        "factors": [
+          "Well-understood CRUD pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Depends on auth and orders existing first"
+      },
+      "priority": 10,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-017.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-018",
+    "fingerprint": "admin customer list with purchase history|customer management",
+    "title": "Admin customer list with purchase history",
+    "description": "Admin-facing customer list showing each customer's purchase history.",
+    "type": "feature",
+    "module": "Customer Management",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "114",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-002",
+      "F-017"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 6,
+        "factors": [
+          "Useful for admin customer support and insight"
+        ]
+      },
+      "effort": {
+        "score": 3,
+        "factors": [
+          "Admin UI already exists (app/admin/customers/), needs data wiring"
+        ]
+      },
+      "risk": {
+        "score": 2,
+        "factors": [
+          "Well-understood list/detail pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 1,
+        "reason": "Not on the conversion-critical path"
+      },
+      "priority": 12,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-018.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-019",
+    "fingerprint": "admin dashboard sales metrics revenue chart topselling products|admin dashboard",
+    "title": "Admin dashboard (sales metrics, revenue chart, top-selling products)",
+    "description": "Dashboard with sales metrics and charts, revenue reporting by period, and top-selling products analytics.",
+    "type": "feature",
+    "module": "Admin Dashboard",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "121-124",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-002",
+      "F-005",
+      "F-013"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 6,
+        "factors": [
+          "Valuable business visibility but not required for the store to function"
+        ]
+      },
+      "effort": {
+        "score": 5,
+        "factors": [
+          "Dashboard UI already exists, needs aggregation queries"
+        ]
+      },
+      "risk": {
+        "score": 3,
+        "factors": [
+          "Aggregation queries are well-understood but need to stay performant"
+        ]
+      },
+      "urgency": {
+        "factor": 0.8,
+        "reason": "Depends on orders/products data existing, not itself blocking"
+      },
+      "priority": 5,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-019.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-020",
+    "fingerprint": "promotions promo code creation management application|promotions",
+    "title": "Promotions (promo code creation, management, application)",
+    "description": "MISSING: No promotions API or admin page found. Discount code creation/management and application to orders.",
+    "type": "feature",
+    "module": "Promotions",
+    "confidence": "stated",
+    "lifecycle": "queued",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "131-134",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-001",
+      "F-011"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 5,
+        "factors": [
+          "Marketing lever but no storefront UI exists yet for it (module status: planned)"
+        ]
+      },
+      "effort": {
+        "score": 5,
+        "factors": [
+          "New table plus admin CRUD plus checkout-side apply logic"
+        ]
+      },
+      "risk": {
+        "score": 3,
+        "factors": [
+          "Well-understood discount-code pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 0.8,
+        "reason": "Planned module with no existing UI, lowest client-stated urgency of the checkout-adjacent work"
+      },
+      "priority": 4,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-020.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-021",
+    "fingerprint": "homepage banner crud display|banners",
+    "title": "Homepage banner CRUD & display",
+    "description": "Admin banner CRUD and active-banner display on the storefront homepage carousel.",
+    "type": "feature",
+    "module": "Banners",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "141-143",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-001",
+      "F-002"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 4,
+        "factors": [
+          "Homepage merchandising, not core transaction path"
+        ]
+      },
+      "effort": {
+        "score": 2,
+        "factors": [
+          "Small, self-contained CRUD; admin/storefront UI already exists"
+        ]
+      },
+      "risk": {
+        "score": 1,
+        "factors": [
+          "Trivial, well-understood pattern"
+        ]
+      },
+      "urgency": {
+        "factor": 0.8,
+        "reason": "Low urgency, no dependents"
+      },
+      "priority": 11,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-021.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  },
+  {
+    "id": "F-022",
+    "fingerprint": "transactional email notifications mailgun|email notifications",
+    "title": "Transactional email notifications (Mailgun)",
+    "description": "Order confirmation, payment received, order shipped (with tracking), welcome, and password reset emails sent via Mailgun.",
+    "type": "feature",
+    "module": "Email Notifications",
+    "confidence": "stated",
+    "lifecycle": "complete",
+    "flags": {
+      "needsReanalysis": false,
+      "stale": false,
+      "orphaned": false
+    },
+    "provenance": {
+      "file": "prd.md",
+      "lines": "150-155",
+      "briefHash": "eb06fa6cdd8def75"
+    },
+    "dependsOn": [
+      "F-002",
+      "F-013",
+      "F-015"
+    ],
+    "blocks": [],
+    "blockedBy": [],
+    "score": {
+      "impact": {
+        "score": 7,
+        "factors": [
+          "Required for order/account trust and communication"
+        ]
+      },
+      "effort": {
+        "score": 4,
+        "factors": [
+          "One Mailgun integration point reused across five templates"
+        ]
+      },
+      "risk": {
+        "score": 4,
+        "factors": [
+          "Mailgun deliverability to Indonesian ISPs needs verification (flagged risk in technical-notes.md)"
+        ]
+      },
+      "urgency": {
+        "factor": 1.2,
+        "reason": "Needed soon after checkout/orders/status-updates are live, but not itself blocking"
+      },
+      "priority": 9,
+      "formulaVersion": 1
+    },
+    "overrides": {},
+    "specRef": "specs/F-022.json",
+    "commits": [],
+    "createdAt": "2026-07-12T10:21:30.000Z",
+    "updatedAt": "2026-07-12T21:30:00.000Z"
+  }
+]

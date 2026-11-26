@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - Arnes Dive Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { brand: '#333333' } } } }
+    </script>
+</head>
+<body class="font-sans text-sm bg-gray-100 min-h-screen flex flex-col">
+
+    <div class="flex-1 flex items-center justify-center p-6">
+        <div class="w-full max-w-sm">
+            <a href="homepage.html" class="block text-3xl font-bold text-brand text-center mb-12">ARNES DIVE</a>
+            
+            <h1 class="text-2xl font-semibold text-center mb-2">Masuk</h1>
+            <p class="text-center text-gray-600 text-sm mb-8">Masukkan email untuk menerima kode login</p>
+
+            <form>
+                <div class="mb-4">
+                    <label class="block text-xs text-gray-600 mb-1">Email</label>
+                    <input type="email" placeholder="email@contoh.com" class="w-full px-4 py-3 border border-gray-300 text-sm focus:border-brand focus:outline-none bg-white">
+                </div>
+                
+                <a href="otp.html" class="block w-full bg-brand text-white py-3 text-center text-sm hover:bg-gray-700">Kirim Kode Login</a>
+            </form>
+
+            <div class="flex items-center my-6">
+                <div class="flex-1 h-px bg-gray-300"></div>
+                <span class="px-4 text-xs text-gray-400">atau</span>
+                <div class="flex-1 h-px bg-gray-300"></div>
+            </div>
+
+            <a href="#" class="flex items-center justify-center gap-3 w-full py-3 bg-white border border-gray-300 text-sm hover:border-brand">
+                <span class="font-medium">G</span>
+                Lanjutkan dengan Google
+            </a>
+
+            <p class="text-center text-sm text-gray-600 mt-6">
+                Belum punya akun? <a href="register.html" class="font-medium text-brand hover:underline">Daftar</a>
+            </p>
+
+            <a href="homepage.html" class="block text-center text-xs text-gray-400 mt-8 hover:text-brand">← Kembali ke beranda</a>
+        </div>
+    </div>
+
+</body>
+</html>

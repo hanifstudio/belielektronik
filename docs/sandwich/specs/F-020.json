@@ -1,0 +1,41 @@
+{
+  "featureId": "F-020",
+  "title": "Promotions (promo code creation, management, application)",
+  "module": "Promotions",
+  "description": "Discount code creation/management by admin and application of a promo code to an order, including validity periods.",
+  "scope": {
+    "inScope": [
+      "Promo code creation and management (admin)",
+      "Apply promo code to an order during checkout",
+      "Promotion validity periods"
+    ],
+    "outOfScope": [
+      "Automatic/rule-based promotions without a code"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Admin can create a promo code with a discount value and validity period",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Customer can apply a valid promo code at checkout and see the discount reflected in the order total",
+      "done": false
+    },
+    {
+      "id": "AC3",
+      "text": "An expired or invalid promo code is rejected with a clear message",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-001",
+    "F-011"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "131-134"
+  }
+}

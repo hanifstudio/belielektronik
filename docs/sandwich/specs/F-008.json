@@ -1,0 +1,33 @@
+{
+  "featureId": "F-008",
+  "title": "Brand management",
+  "module": "Product Management",
+  "description": "Admin CRUD for product brands.",
+  "scope": {
+    "inScope": [
+      "Brand CRUD"
+    ],
+    "outOfScope": [
+      "Brand landing pages"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Admin can create, edit, and delete brands",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Products can be assigned a brand",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-001"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "46"
+  }
+}

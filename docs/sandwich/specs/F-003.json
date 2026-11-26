@@ -1,0 +1,40 @@
+{
+  "featureId": "F-003",
+  "title": "Email verification (OTP) for new accounts",
+  "module": "Authentication",
+  "description": "New accounts start unverified; system sends an OTP via Mailgun that the customer must confirm before full access.",
+  "scope": {
+    "inScope": [
+      "Generate OTP on registration and send verification email via Mailgun",
+      "Verify OTP and mark account status as verified",
+      "OTP expiry handling"
+    ],
+    "outOfScope": [
+      "SMS-based verification"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "A newly registered account starts in 'unverified' status",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Customer receives a verification email with OTP/link after registering",
+      "done": false
+    },
+    {
+      "id": "AC3",
+      "text": "Clicking/submitting a valid, unexpired OTP marks the account verified",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-002"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "32"
+  }
+}

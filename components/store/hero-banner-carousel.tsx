@@ -1,0 +1,155 @@
+'use client';
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
+import Image from 'next/image';
+import { AnimatedButton } from '@/components/ui/animated-button';
+import type { Banner } from '@/lib/db/schema';
+
+interface HeroBannerCarouselProps {
+  banners: Banner[];
+}
+
+export function HeroBannerCarousel({ banners }: HeroBannerCarouselProps) {
+  const t = useTranslations('home');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [parallaxOffset, setParallaxOffset] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Fallback banner when no banners from DB
+  const fallbackBanner = {
+    id: 'fallback',
+    title: t('hero.fallbackTitle'),
+    subtitle: t('hero.subtitle'),
+    eyebrow: t('hero.eyebrow'),
+    ctaText: t('hero.ctaText'),
+    ctaLink: '/produk',
+    imageUrl: '/hero-diver.webp',
+  };
+
+  // Use fallback if no banners from DB
+  const displayBanners = banners.length > 0 ? banners : [fallbackBanner as Banner];
+  
+  // Parallax scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const scrollProgress = -rect.top / rect.height;
+      setParallaxOffset(scrollProgress * 150); // Adjust multiplier for parallax intensity
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  // Auto-advance carousel every 5 seconds
+  useEffect(() => {
+    if (displayBanners.length <= 1) return;
+    
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % displayBanners.length);
+        setIsTransitioning(false);
+      }, 300);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [displayBanners.length]);
+  
+  const goToSlide = useCallback((index: number) => {
+    if (index === currentIndex) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentIndex(index);
+      setIsTransitioning(false);
+    }, 300);
+  }, [currentIndex]);
+  
+  const currentBanner = displayBanners[currentIndex];
+  
+  if (!currentBanner) {
+    return null;
+  }
+  
+  return (
+    <section ref={sectionRef} className="relative min-h-[650px] lg:min-h-[740px] overflow-hidden">
+      {/* Background Image with Parallax */}
+      <div 
+        className="absolute inset-0 z-0 will-change-transform"
+        style={{ transform: `translateY(${parallaxOffset}px) scale(1.1)` }}
+      >
+        <Image
+          src={currentBanner.imageUrl}
+          alt={currentBanner.title || t('hero.imageAltFallback')}
+          fill
+          preload
+          fetchPriority="high"
+          sizes="100vw"
+          className={`object-cover object-left lg:object-center transition-opacity duration-300 ${
+            isTransitioning ? 'opacity-0' : 'opacity-100'
+          }`}
+        />
+        {/* Gradient overlay for text readability — darker on the left where the copy sits,
+            clearing toward the right so the diver stays visible */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-transparent" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 flex items-center justify-start">
+        <div className="w-full max-w-[1440px] mx-auto px-6 lg:px-12">
+          <div className="flex flex-col items-start justify-center text-left min-h-[650px] lg:min-h-[740px] py-24 lg:py-28">
+            <div className={`w-full lg:max-w-[54%] transition-all duration-300 ${
+              isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
+            }`}>
+              {currentBanner.eyebrow && (
+                <span className="inline-block text-xs uppercase tracking-widest text-white/70 mb-4">
+                  {currentBanner.eyebrow}
+                </span>
+              )}
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white mb-6 leading-[1.1] tracking-tighter whitespace-pre-line">
+                {currentBanner.title || t('hero.fallbackTitle')}
+              </h1>
+              {currentBanner.subtitle && (
+                <p className="text-white/80 text-lg mb-8 max-w-md leading-relaxed">
+                  {currentBanner.subtitle}
+                </p>
+              )}
+              <div className="flex flex-wrap gap-3 justify-start">
+                <AnimatedButton
+                  asChild
+                  variant="white"
+                >
+                  <Link href={currentBanner.ctaLink || currentBanner.link || '/produk'}>
+                    {currentBanner.ctaText || t('hero.ctaFallback')}
+                  </Link>
+                </AnimatedButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Carousel Indicators */}
+      {displayBanners.length > 1 && (
+        <div className="absolute bottom-24 lg:bottom-28 left-0 right-0 z-20 flex justify-center lg:justify-start gap-2 max-w-[1440px] mx-auto px-6 lg:px-12">
+          {displayBanners.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                index === currentIndex 
+                  ? 'bg-white w-6' 
+                  : 'bg-white/50 hover:bg-white/70'
+              }`}
+              aria-label={t('hero.goToSlide', { number: index + 1 })}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan Akun - Arnes Dive Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { brand: '#333333' } } } }</script>
+</head>
+<body class="font-sans text-sm">
+    <div class="bg-gray-200 py-2 text-center text-xs">Gratis Ongkir</div>
+    <nav class="flex items-center justify-between px-4 py-4 border-b bg-white max-w-7xl mx-auto">
+        <div class="hidden lg:flex gap-6">
+            <a href="homepage.html" class="text-gray-600 hover:text-brand text-sm">Beranda</a>
+            <a href="plp.html" class="text-gray-600 hover:text-brand text-sm">Freediving</a>
+        </div>
+        <a href="homepage.html" class="text-2xl font-bold text-brand">ARNES DIVE</a>
+        <div class="flex gap-4 text-gray-600 text-sm">
+            <a href="cart.html" class="hover:text-brand">[Keranjang]</a>
+            <a href="account.html" class="hover:text-brand">[Akun]</a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <aside class="w-full lg:w-64 flex-shrink-0">
+                <div class="bg-gray-100 p-6 text-center mb-4">
+                    <div class="w-20 h-20 rounded-full bg-gray-300 mx-auto mb-3 flex items-center justify-center text-3xl text-gray-500">A</div>
+                    <div class="font-medium">Ahmad Diver</div>
+                    <div class="text-xs text-gray-500">ahmad@email.com</div>
+                </div>
+                <nav class="bg-gray-100">
+                    <a href="account.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Dashboard</a>
+                    <a href="account-orders.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Pesanan Saya</a>
+                    <a href="wishlist.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Wishlist</a>
+                    <a href="account-address.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Alamat</a>
+                    <a href="account-settings.html" class="block py-3 px-5 border-l-4 border-brand bg-white font-medium">Pengaturan</a>
+                    <a href="login.html" class="block py-3 px-5 border-l-4 border-transparent text-gray-600 hover:bg-white">Keluar</a>
+                </nav>
+            </aside>
+
+            <main class="flex-1 space-y-6">
+                <h1 class="text-2xl font-semibold mb-6">Pengaturan Akun</h1>
+
+                <!-- Profile -->
+                <div class="bg-white border">
+                    <div class="p-4 bg-gray-100 border-b font-medium">Profil</div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-6 mb-6">
+                            <div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-3xl text-gray-500">A</div>
+                            <div>
+                                <p class="font-medium text-sm">Foto Profil</p>
+                                <p class="text-xs text-gray-600 mb-2">JPG, PNG. Maksimal 2MB</p>
+                                <button class="px-3 py-1 border text-xs hover:border-brand">Unggah Foto</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">Nama Depan</label>
+                                <input type="text" value="Ahmad" class="w-full px-3 py-2 border text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">Nama Belakang</label>
+                                <input type="text" value="Diver" class="w-full px-3 py-2 border text-sm">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-xs text-gray-600 mb-1">Email</label>
+                            <input type="email" value="ahmad@email.com" class="w-full max-w-md px-3 py-2 border text-sm">
+                            <p class="text-xs text-gray-400 mt-1">Alamat email digunakan untuk login dan notifikasi</p>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-xs text-gray-600 mb-1">Nomor Telepon</label>
+                            <input type="tel" value="+62 812-3456-7890" class="w-full max-w-md px-3 py-2 border text-sm">
+                        </div>
+                        <button class="bg-brand text-white px-4 py-2 text-xs uppercase hover:bg-gray-700">Simpan Perubahan</button>
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div class="bg-white border">
+                    <div class="p-4 bg-gray-100 border-b font-medium">Keamanan</div>
+                    <div class="p-6">
+                        <label class="block text-xs text-gray-600 mb-1">Kata Sandi</label>
+                        <p class="text-sm text-gray-600 mb-3">Terakhir diubah 3 bulan yang lalu</p>
+                        <a href="#" class="px-4 py-2 border text-sm hover:border-brand">Ubah Kata Sandi</a>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="bg-white border">
+                    <div class="p-4 bg-gray-100 border-b font-medium">Notifikasi</div>
+                    <div class="p-6 space-y-4">
+                        <div class="flex justify-between items-center py-3 border-b">
+                            <div>
+                                <p class="text-sm">Email Promosi</p>
+                                <p class="text-xs text-gray-600">Terima info promo dan diskon via email</p>
+                            </div>
+                            <div class="w-12 h-6 bg-green-500 rounded-full relative cursor-pointer">
+                                <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center py-3 border-b">
+                            <div>
+                                <p class="text-sm">Notifikasi Pesanan</p>
+                                <p class="text-xs text-gray-600">Update status pesanan via email dan WhatsApp</p>
+                            </div>
+                            <div class="w-12 h-6 bg-green-500 rounded-full relative cursor-pointer">
+                                <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center py-3">
+                            <div>
+                                <p class="text-sm">Newsletter</p>
+                                <p class="text-xs text-gray-600">Newsletter mingguan tentang produk baru</p>
+                            </div>
+                            <div class="w-12 h-6 bg-gray-300 rounded-full relative cursor-pointer">
+                                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="bg-white border border-red-300">
+                    <div class="p-4 bg-red-50 border-b font-medium text-red-600">Zona Bahaya</div>
+                    <div class="p-6">
+                        <p class="text-sm text-gray-600 mb-4">Menghapus akun akan menghapus semua data Anda secara permanen. Tindakan ini tidak dapat dikembalikan.</p>
+                        <a href="#" class="px-4 py-2 border border-red-500 text-red-500 text-xs hover:bg-red-50">Hapus Akun Saya</a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

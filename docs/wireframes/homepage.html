@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arnes Dive Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#333333',
+                        'brand-light': '#666666',
+                        'brand-lighter': '#999999',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans text-sm leading-relaxed">
+
+    <!-- Top Bar -->
+    <div class="bg-gray-200 py-2 text-center text-xs">
+        Gratis Ongkir untuk pembelian di atas Rp 500.000
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex items-center justify-between px-4 py-4 border-b border-gray-200 max-w-7xl mx-auto">
+        <!-- Mobile Menu Button -->
+        <button class="lg:hidden text-gray-600" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+        
+        <!-- Desktop Nav Links -->
+        <div class="hidden lg:flex gap-6">
+            <a href="homepage.html" class="text-gray-600 hover:text-brand text-sm">Beranda</a>
+            <a href="plp-freediving.html" class="text-gray-600 hover:text-brand text-sm">Freediving</a>
+            <a href="plp-scuba.html" class="text-gray-600 hover:text-brand text-sm">Scuba</a>
+            <a href="plp-accessories.html" class="text-gray-600 hover:text-brand text-sm">Aksesoris</a>
+            <a href="plp-sale.html" class="text-red-500 hover:text-red-700 text-sm">Sale</a>
+        </div>
+        
+        <a href="homepage.html" class="text-2xl font-bold text-brand absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0">ARNES DIVE</a>
+        
+        <div class="flex gap-4 text-gray-600">
+            <a href="search.html" class="hidden sm:block hover:text-brand">[Cari]</a>
+            <a href="wishlist.html" class="hover:text-brand">[Wishlist]</a>
+            <a href="cart.html" class="hover:text-brand">[Keranjang]</a>
+            <a href="account.html" class="hidden sm:block hover:text-brand">[Akun]</a>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-gray-200 px-4 py-4">
+        <div class="flex flex-col gap-3">
+            <a href="homepage.html" class="text-gray-600 py-2">Beranda</a>
+            <a href="plp.html" class="text-gray-600 py-2">Freediving</a>
+            <a href="plp.html" class="text-gray-600 py-2">Scuba</a>
+            <a href="plp.html" class="text-gray-600 py-2">Aksesoris</a>
+            <a href="plp.html" class="text-gray-600 py-2">Sale</a>
+            <hr class="my-2">
+            <a href="search.html" class="text-gray-600 py-2">Cari</a>
+            <a href="account.html" class="text-gray-600 py-2">Akun</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="grid lg:grid-cols-2 min-h-[400px] lg:min-h-[500px]">
+        <div class="p-8 lg:p-12 flex flex-col justify-center order-2 lg:order-1">
+            <span class="text-xs uppercase tracking-widest text-gray-500 mb-2">Koleksi Terbaru</span>
+            <h1 class="text-3xl lg:text-5xl font-semibold mb-4">Peralatan Freediving Premium</h1>
+            <p class="text-gray-600 mb-6 max-w-md">Temukan masker, fin, dan aksesoris freediving berkualitas tinggi untuk pengalaman diving terbaik Anda.</p>
+            <div class="flex flex-wrap gap-4">
+                <a href="plp.html" class="bg-brand text-white px-6 py-3 text-xs uppercase tracking-wider hover:bg-gray-700">Lihat Koleksi</a>
+                <a href="plp.html" class="border border-brand px-6 py-3 text-xs uppercase tracking-wider hover:bg-gray-100">Sale</a>
+            </div>
+        </div>
+        <div class="bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 min-h-[250px] lg:min-h-full order-1 lg:order-2">
+            Hero Image
+        </div>
+    </section>
+
+    <!-- Category Strip -->
+    <section class="py-8 border-b border-gray-200">
+        <div class="flex justify-center gap-6 lg:gap-8 px-4 overflow-x-auto">
+            <a href="plp.html" class="flex flex-col items-center gap-2 flex-shrink-0">
+                <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs">Img</div>
+                <span class="text-xs lg:text-sm whitespace-nowrap">Masker</span>
+            </a>
+            <a href="plp.html" class="flex flex-col items-center gap-2 flex-shrink-0">
+                <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs">Img</div>
+                <span class="text-xs lg:text-sm whitespace-nowrap">Fin</span>
+            </a>
+            <a href="plp.html" class="flex flex-col items-center gap-2 flex-shrink-0">
+                <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs">Img</div>
+                <span class="text-xs lg:text-sm whitespace-nowrap">Wetsuit</span>
+            </a>
+            <a href="plp.html" class="flex flex-col items-center gap-2 flex-shrink-0">
+                <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs">Img</div>
+                <span class="text-xs lg:text-sm whitespace-nowrap">Sabuk</span>
+            </a>
+            <a href="plp.html" class="flex flex-col items-center gap-2 flex-shrink-0">
+                <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs">Img</div>
+                <span class="text-xs lg:text-sm whitespace-nowrap">Aksesoris</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="py-12 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-8">
+            <h2 class="text-xl lg:text-2xl font-semibold">Produk Unggulan</h2>
+            <p class="text-gray-600 text-sm">Pilihan terbaik untuk freediving dan scuba diving</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+            <a href="pdp.html" class="group">
+                <div class="aspect-[3/4] bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 mb-2 relative">
+                    <span class="absolute top-2 left-2 bg-brand text-white text-[10px] uppercase px-2 py-1">Baru</span>
+                    Product Image
+                </div>
+                <h3 class="font-medium text-sm">Masker Freediving Pro</h3>
+                <p class="text-gray-600 text-sm">Rp 850.000</p>
+            </a>
+            <a href="pdp.html" class="group">
+                <div class="aspect-[3/4] bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 mb-2 relative">
+                    <span class="absolute top-2 left-2 bg-brand text-white text-[10px] uppercase px-2 py-1">Baru</span>
+                    Product Image
+                </div>
+                <h3 class="font-medium text-sm">Fin Carbón Pro</h3>
+                <p class="text-gray-600 text-sm">Rp 2.500.000</p>
+            </a>
+            <a href="pdp.html" class="group">
+                <div class="aspect-[3/4] bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 mb-2">
+                    Product Image
+                </div>
+                <h3 class="font-medium text-sm">Wetsuit 3mm Premium</h3>
+                <p class="text-gray-600 text-sm">Rp 1.800.000</p>
+            </a>
+            <a href="pdp.html" class="group">
+                <div class="aspect-[3/4] bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 mb-2 relative">
+                    <span class="absolute top-2 left-2 bg-red-500 text-white text-[10px] uppercase px-2 py-1">Sale</span>
+                    Product Image
+                </div>
+                <h3 class="font-medium text-sm">Snorkel Dry Top</h3>
+                <p class="text-sm"><span class="text-red-500">Rp 250.000</span> <s class="text-gray-400">Rp 320.000</s></p>
+            </a>
+        </div>
+        
+        <div class="text-center mt-8">
+            <a href="plp.html" class="text-sm uppercase border-b border-brand">Lihat Semua →</a>
+        </div>
+    </section>
+
+    <!-- Split Banner -->
+    <section class="grid md:grid-cols-2">
+        <div class="bg-gray-100 border-2 border-dashed border-gray-300 min-h-[300px] lg:min-h-[400px] relative flex items-end p-6 lg:p-8">
+            <div>
+                <span class="text-xs uppercase tracking-widest text-gray-500">Freediving</span>
+                <h3 class="text-2xl lg:text-3xl font-semibold my-2">Koleksi Freediving</h3>
+                <a href="plp.html" class="inline-block border border-brand px-4 py-2 text-xs uppercase hover:bg-white">Lihat Koleksi</a>
+            </div>
+        </div>
+        <div class="bg-gray-100 border-2 border-dashed border-gray-300 min-h-[300px] lg:min-h-[400px] relative flex items-end p-6 lg:p-8">
+            <div>
+                <span class="text-xs uppercase tracking-widest text-gray-500">Scuba</span>
+                <h3 class="text-2xl lg:text-3xl font-semibold my-2">Koleksi Scuba</h3>
+                <a href="plp.html" class="inline-block border border-brand px-4 py-2 text-xs uppercase hover:bg-white">Lihat Koleksi</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community -->
+    <section class="py-12 px-4 max-w-7xl mx-auto">
+        <div class="flex justify-between items-end mb-6">
+            <div>
+                <h2 class="text-xl font-semibold">#ArnesDive</h2>
+                <p class="text-gray-600 text-sm">Bagikan petualangan diving Anda</p>
+            </div>
+            <span class="text-gray-600 text-sm hidden sm:block">@arnesdive</span>
+        </div>
+        <div class="grid grid-cols-3 md:grid-cols-5 gap-2">
+            <div class="aspect-square bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs">UGC 1</div>
+            <div class="aspect-square bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs">UGC 2</div>
+            <div class="aspect-square bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs">UGC 3</div>
+            <div class="aspect-square bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs hidden md:flex">UGC 4</div>
+            <div class="aspect-square bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 text-xs hidden md:flex">UGC 5</div>
+        </div>
+    </section>
+
+    <!-- Value Props -->
+    <section class="bg-gray-100 py-12 px-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+                <div class="text-3xl mb-2">🚚</div>
+                <h4 class="font-semibold text-sm">Gratis Ongkir</h4>
+                <p class="text-xs text-gray-600">Untuk pembelian di atas Rp 500.000</p>
+            </div>
+            <div>
+                <div class="text-3xl mb-2">✓</div>
+                <h4 class="font-semibold text-sm">Produk Original</h4>
+                <p class="text-xs text-gray-600">100% produk berkualitas</p>
+            </div>
+            <div>
+                <div class="text-3xl mb-2">↩️</div>
+                <h4 class="font-semibold text-sm">Easy Return</h4>
+                <p class="text-xs text-gray-600">14 hari pengembalian</p>
+            </div>
+            <div>
+                <div class="text-3xl mb-2">💬</div>
+                <h4 class="font-semibold text-sm">Support 24/7</h4>
+                <p class="text-xs text-gray-600">Siap membantu kapan saja</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 py-12 px-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div>
+                <h5 class="text-xs uppercase tracking-wider font-semibold mb-4">Newsletter</h5>
+                <p class="text-xs text-gray-600 mb-3">Dapatkan info produk terbaru</p>
+                <input type="email" placeholder="Email Anda" class="w-full px-3 py-2 border border-gray-300 mb-2 text-sm">
+                <button class="w-full bg-brand text-white px-3 py-2 text-xs uppercase">Langganan</button>
+            </div>
+            <div>
+                <h5 class="text-xs uppercase tracking-wider font-semibold mb-4">Belanja</h5>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="plp.html" class="text-gray-600 hover:text-brand">Freediving</a></li>
+                    <li><a href="plp.html" class="text-gray-600 hover:text-brand">Scuba</a></li>
+                    <li><a href="plp.html" class="text-gray-600 hover:text-brand">Aksesoris</a></li>
+                    <li><a href="plp.html" class="text-gray-600 hover:text-brand">Sale</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-xs uppercase tracking-wider font-semibold mb-4">Bantuan</h5>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="faq.html" class="text-gray-600 hover:text-brand">FAQ</a></li>
+                    <li><a href="faq.html" class="text-gray-600 hover:text-brand">Pengiriman</a></li>
+                    <li><a href="faq.html" class="text-gray-600 hover:text-brand">Pengembalian</a></li>
+                    <li><a href="contact.html" class="text-gray-600 hover:text-brand">Hubungi Kami</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-xs uppercase tracking-wider font-semibold mb-4">Tentang</h5>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="about.html" class="text-gray-600 hover:text-brand">Tentang Kami</a></li>
+                    <li><a href="privacy.html" class="text-gray-600 hover:text-brand">Kebijakan Privasi</a></li>
+                    <li><a href="terms.html" class="text-gray-600 hover:text-brand">Syarat & Ketentuan</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center pt-8 mt-8 border-t border-gray-200 text-xs text-gray-600">
+            © 2024 Arnes Dive Shop. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+</html>

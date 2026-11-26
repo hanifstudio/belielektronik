@@ -1,0 +1,38 @@
+{
+  "featureId": "F-009",
+  "title": "Product search & filtering",
+  "module": "Product Management",
+  "description": "Storefront product search with filters for category, brand, and price range.",
+  "scope": {
+    "inScope": [
+      "Full-text/keyword product search",
+      "Filter by category, brand, and price range",
+      "Wire existing components/search/search-results.tsx to real queries"
+    ],
+    "outOfScope": [
+      "Search-as-you-type autocomplete (not stated)",
+      "Search analytics"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Customer can search products by keyword and see matching results",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Customer can filter results by category, brand, and price range",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-005",
+    "F-007",
+    "F-008"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "47"
+  }
+}

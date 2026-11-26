@@ -1,0 +1,176 @@
+{
+  "projectName": "Arnesh Dive Shop E-Commerce Platform",
+  "mode": "answer",
+  "overview": "E-commerce platform for a dive shop selling dive equipment. Frontend UI is 100% complete (storefront + admin dashboard). Requires backend implementation: database setup, authentication system, product APIs, shopping cart, checkout flow, Midtrans payment integration, and admin functionality.",
+  "projectState": {
+    "phase": "development",
+    "hasExistingCodebase": true,
+    "orderSource": "RFP document + RFP summary"
+  },
+  "actors": [
+    { "name": "Customer", "role": "End user browsing products, making purchases, managing their account", "confidence": "stated" },
+    { "name": "Admin", "role": "Store staff managing products, orders, customers, and promotions", "confidence": "stated" },
+    { "name": "Super Admin", "role": "Full system access including user management", "confidence": "stated" }
+  ],
+  "modules": [
+    {
+      "name": "Authentication",
+      "status": "partial",
+      "description": "User registration, login, session management, password reset, email verification. Supports both explicit registration and auto-registration during guest checkout.",
+      "features": [
+        { "text": "Email/password registration with validation", "confidence": "stated" },
+        { "text": "Secure login with session management (HTTP-only cookies)", "confidence": "stated" },
+        { "text": "Forgot password flow with email OTP", "confidence": "stated" },
+        { "text": "Email verification for new accounts", "confidence": "stated" },
+        { "text": "Role-based access control (customer, admin, super_admin)", "confidence": "stated" },
+        { "text": "Rate limiting on auth endpoints", "confidence": "stated" },
+        { "text": "Auto-registration from guest checkout with collected user data", "confidence": "stated" }
+      ]
+    },
+    {
+      "name": "Product Management",
+      "status": "partial",
+      "description": "Product catalog with variants, categories, brands. Frontend UI exists for both storefront (product listings, detail pages) and admin (product CRUD). Mock data in lib/data/mock-products.ts. No API routes or database. Uses Vercel Blob for image storage. Simple availability flag instead of stock quantities.",
+      "features": [
+        { "text": "Product CRUD with image upload to Vercel Blob", "confidence": "stated" },
+        { "text": "Product variants (size, color) with individual pricing", "confidence": "stated" },
+        { "text": "Category management with hierarchical structure", "confidence": "stated" },
+        { "text": "Brand management", "confidence": "stated" },
+        { "text": "Product search and filtering", "confidence": "stated" },
+        { "text": "Featured products selection", "confidence": "stated" },
+        { "text": "Product status (active/inactive)", "confidence": "stated" },
+        { "text": "Availability flag for products (available/unavailable)", "confidence": "stated" }
+      ]
+    },
+    {
+      "name": "Shopping Cart",
+      "status": "partial",
+      "description": "Cart system for logged-in and guest users. Frontend UI exists in app/(store)/cart/. Zustand store in lib/store/cart.ts for client state. Needs server-side persistence and API routes.",
+      "features": [
+        { "text": "Server-side cart storage (database) for logged-in users", "confidence": "stated" },
+        { "text": "Cart persistence across sessions", "confidence": "stated" },
+        { "text": "Add/remove/update cart items", "confidence": "stated" },
+        { "text": "Cart item quantity validation", "confidence": "stated" },
+        { "text": "Real-time cart total calculation", "confidence": "stated" }
+      ]
+    },
+    {
+      "name": "Checkout",
+      "status": "partial",
+      "description": "Multi-step checkout with guest support and auto-registration. Frontend UI exists in app/(store)/checkout/. Guest users provide contact/shipping data which is used to auto-create an account on order completion.",
+      "features": [
+        { "text": "Multi-step checkout (Contact → Shipping → Payment → Confirm)", "confidence": "stated" },
+        { "text": "Shipping address form with Indonesia-specific fields (province, city, postal code)", "confidence": "stated" },
+        { "text": "Guest checkout without prior registration", "confidence": "stated" },
+        { "text": "Auto-registration on order completion using collected user data", "confidence": "stated" },
+        { "text": "Order summary review before payment", "confidence": "stated" },
+        { "text": "Order confirmation page with details", "confidence": "stated" }
+      ]
+    },
+    {
+      "name": "Payment",
+      "status": "planned",
+      "description": "Midtrans payment integration for Indonesian market. No implementation exists yet.",
+      "features": [
+        { "text": "Midtrans Snap integration for checkout", "confidence": "stated" },
+        { "text": "Support for credit/debit cards", "confidence": "stated" },
+        { "text": "Bank transfer (Virtual Account)", "confidence": "stated" },
+        { "text": "E-wallets (GoPay, OVO, ShopeePay)", "confidence": "stated" },
+        { "text": "QRIS support", "confidence": "stated" },
+        { "text": "Webhook handler for payment notifications", "confidence": "stated" },
+        { "text": "Payment status tracking (pending, paid, failed, expired)", "confidence": "stated" },
+        { "text": "Idempotency keys to prevent duplicate charges", "confidence": "stated" }
+      ]
+    },
+    {
+      "name": "Order Management",
+      "status": "partial",
+      "description": "Full order lifecycle from placement to delivery. Frontend UI exists for customer order history and admin order management. Mock data in lib/data/mock-orders.ts. Order status constants in lib/constants/order-status.ts.",
+      "features": [
+        { "text": "Order creation from cart", "confidence": "stated" },
+        { "text": "Order list with filtering (status, date range, search)", "confidence": "stated" },
+        { "text": "Order detail view with customer info, items, payment", "confidence": "stated" },
+        { "text": "Order status updates (processing, shipped, delivered, cancelled)", "confidence": "stated" },
+        { "text": "Audit trail for order status changes", "confidence": "stated" },
+        { "text": "Export orders to CSV/Excel", "confidence": "stated" }
+      ]
+    },
+    {
+      "name": "Customer Management",
+      "status": "partial",
+      "description": "Customer accounts and profiles. Frontend UI exists for account pages and admin customer list. Mock data in lib/data/mock-customers.ts.",
+      "features": [
+        { "text": "Customer registration and profile management", "confidence": "stated" },
+        { "text": "Order history view", "confidence": "stated" },
+        { "text": "Saved addresses management", "confidence": "stated" },
+        { "text": "Admin customer list with purchase history", "confidence": "stated" }
+      ]
+    },
+    {
+      "name": "Admin Dashboard",
+      "status": "partial",
+      "description": "Admin interface for store management. Frontend UI exists in app/admin/. Dashboard page, products, orders, customers, banners, settings pages all built. No backend functionality.",
+      "features": [
+        { "text": "Dashboard with sales metrics and charts", "confidence": "stated" },
+        { "text": "Revenue reporting by period", "confidence": "stated" },
+        { "text": "Top-selling products analytics", "confidence": "stated" }
+      ]
+    },
+    {
+      "name": "Promotions",
+      "status": "planned",
+      "description": "Discount codes and promotions system. No frontend or backend implementation yet.",
+      "features": [
+        { "text": "Promo code creation and management", "confidence": "stated" },
+        { "text": "Apply promo code to order", "confidence": "stated" },
+        { "text": "Promotion validity periods", "confidence": "inferred" }
+      ]
+    },
+    {
+      "name": "Banners",
+      "status": "partial",
+      "description": "Homepage banner carousel. Frontend UI exists for display. Mock data in lib/data/mock-banners.ts. Admin banner management page exists. Needs API and database.",
+      "features": [
+        { "text": "Banner CRUD for admin", "confidence": "stated" },
+        { "text": "Active banner display on homepage", "confidence": "stated" }
+      ]
+    },
+    {
+      "name": "Email Notifications",
+      "status": "planned",
+      "description": "Transactional emails for order and account events via Mailgun. No implementation yet.",
+      "features": [
+        { "text": "Order confirmation email", "confidence": "stated" },
+        { "text": "Payment received email", "confidence": "stated" },
+        { "text": "Order shipped email with tracking", "confidence": "stated" },
+        { "text": "Welcome email for new registrations", "confidence": "stated" },
+        { "text": "Password reset email", "confidence": "stated" }
+      ]
+    }
+  ],
+  "integrations": [
+    { "text": "Midtrans Payment Gateway", "confidence": "stated" },
+    { "text": "Neon PostgreSQL (serverless)", "confidence": "stated" },
+    { "text": "Mailgun for transactional emails", "confidence": "stated" },
+    { "text": "Vercel Blob for product images", "confidence": "stated" }
+  ],
+  "constraints": [
+    { "text": "Frontend UI is complete and cannot be changed significantly", "confidence": "stated" },
+    { "text": "Must use existing tech stack (Next.js 16, Drizzle ORM, PostgreSQL, Midtrans)", "confidence": "stated" },
+    { "text": "Indonesia-specific: Midtrans payment, Indonesian address format (province, city, postal code)", "confidence": "stated" },
+    { "text": "All prices stored as integer cents to avoid floating-point issues", "confidence": "stated" },
+    { "text": "Order numbers in format: ORD-YYYYMMDD-XXXX", "confidence": "stated" },
+    { "text": "Soft deletes for products/customers (not hard deletes)", "confidence": "stated" },
+    { "text": "Page load time < 3 seconds", "confidence": "stated" },
+    { "text": "API response time < 500ms", "confidence": "stated" },
+    { "text": "ISR (Incremental Static Regeneration) for product pages", "confidence": "stated" },
+    { "text": "Budget: IDR 50-100M (approx. USD 3,000-6,000)", "confidence": "stated" },
+    { "text": "No stock/inventory quantity tracking - simple availability flag only", "confidence": "stated" },
+    { "text": "No product reviews/ratings for initial delivery", "confidence": "stated" }
+  ],
+  "stakeholders": [
+    { "name": "Arnesh Dive Shop", "role": "Client" }
+  ],
+  "timeline": "8-12 weeks",
+  "openQuestionsCount": 0
+}

@@ -1,0 +1,35 @@
+{
+  "featureId": "F-018",
+  "title": "Admin customer list with purchase history",
+  "module": "Customer Management",
+  "description": "Admin-facing customer list showing each customer's purchase history.",
+  "scope": {
+    "inScope": [
+      "Admin customer list",
+      "Purchase history per customer"
+    ],
+    "outOfScope": [
+      "Customer segmentation/analytics beyond purchase history"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "text": "Admin can view a list of all customers",
+      "done": false
+    },
+    {
+      "id": "AC2",
+      "text": "Admin can see a given customer's purchase history",
+      "done": false
+    }
+  ],
+  "dependsOn": [
+    "F-002",
+    "F-017"
+  ],
+  "source": {
+    "file": "prd.md",
+    "lines": "114"
+  }
+}
